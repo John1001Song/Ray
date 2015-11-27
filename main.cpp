@@ -10,6 +10,8 @@
 #include <math.h>
 #include <time.h>
 #include <iostream>
+#include "Object3D.cpp"
+#include "Object3D.h"
 
 #ifdef __APPLE__
 #   include <OpenGL/gl.h>

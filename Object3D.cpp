@@ -27,9 +27,15 @@ Object3D::Object3D(){
     scale[2] = 1;
     
     //inital material all half value
+    //Object material for amb, dif, spec, shiny
     float initMaterial[4] = {.5, .5, .5, 1};
-    material[0] = initMaterial;
-//    material[0] = new float[4];
+    float initShiny[1] = {30};
+    material[0] = initMaterial;//amb
+    material[1] = initMaterial;//dif
+    material[2] = initMaterial;//spec
+    material[3] = initShiny;//shiny     caution: value of shiny should be converted from "float" to "int" if necessary
+    
+    
 }
 
 
