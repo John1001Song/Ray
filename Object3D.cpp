@@ -35,7 +35,10 @@ Object3D::Object3D(){
     material[2] = initMaterial;//spec
     material[3] = initShiny;//shiny     caution: value of shiny should be converted from "float" to "int" if necessary
     
-    
+    //borrow the veteces position from slide week6 page 13 and use them as the frame position
+    //but don't know if the vetex order is correct or not!!!!!!!!
+    float boundVetx[8][3] = { {-0.5,-0.5,0.5},{-0.5,0.5,0.5}, {0.5,0.5,0.5},{0.5,-0.5,0.5},
+                              {-0.5,-0.5,-0.5},{-0.5,0.5,-0.5}, {0.5,0.5,-0.5},{0.5,-0.5,-0.5} };
 }
 
 

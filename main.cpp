@@ -62,6 +62,29 @@ void drawPolygon(int a, int b, int c, int d, float v[8][3]){
 /* cube - takes an array of 8 vertices, and draws 6 faces
  *  with drawPolygon, making up a box
  */
+
+void cube(float v[8][3])
+{
+    glColor3fv(cols[1]);
+    drawPolygon(0, 3, 2, 1, v);
+    
+    glColor3fv(cols[2]);
+    drawPolygon(1, 0, 4, 5, v);
+    
+    glColor3fv(cols[3]);
+    drawPolygon(5, 1, 2, 6, v);
+    
+    glColor3fv(cols[4]);
+    drawPolygon(2, 3, 7, 6, v);
+    
+    glColor3fv(cols[5]);
+    drawPolygon(6, 5, 4, 7, v);
+    
+    glColor3fv(cols[0]);
+    drawPolygon(4, 0, 3, 7, v);
+}
+
+
 /* drawBox - takes centre point, width, height and depth of a box,
  *  calculates its corner vertices, and draws it with the cube function
  */
@@ -76,7 +99,7 @@ void drawBox(float* c, float w, float h, float d)
 							 {c[0]+w/2, c[1]+h/2, c[2]-d/2},
 							 {c[0]+w/2, c[1]-h/2, c[2]-d/2} };
     
-    //cube(vertices);
+    cube(vertices);
 }
 
 void keyboard(unsigned char key, int x, int y)
@@ -222,7 +245,7 @@ void init(void)
     
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(45, 1, 1, 100);
+    gluPerspective(45, 1, 1, 200);
 }
 
 
@@ -255,6 +278,8 @@ void display(void)
     glVertex3f(start[0], start[1], start[2]);
     glVertex3f(end[0], end[1], end[2]);
     glEnd();
+    
+    drawBox(origin, 50, -1, 50);
     
     glColor3f(1,1,1);
     glutSolidSphere(1,10,10);
