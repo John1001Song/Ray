@@ -1,0 +1,104 @@
+Key manual:
+
+//Basic Features:
+
+<Add/Delete>
+
+	Adding Objects: "E" "e" 
+
+	Deleting Objects: Right click (if selected)
+
+
+<Interact with Objects>
+
+	traslate: 
+		 left: left button pushed + mouse left movement 
+		 right: left button pushed + mouse right movement
+		 forward: left button pushed + mouse up movement
+		 backward: left button pushed + mouse down movement
+		 
+		 comment:left button pushed: GLUT_LEFT_BUTTON + GLUT DOWN
+
+	rotate: 
+		x and z axes +: left button pushed + left arrow
+		x and z axes -: left button pushed + right arrow
+		y axis +: left button pushed + up arrow
+		y axis -: left button pushed + down arrow
+
+	scale: 
+		x axis +: "Shift" + "x" + up arrow
+		x axis -: "Shift" + "x" + down arrow
+		y axis +: "Shift" + "y" + up arrow
+		y axis -: "Shift" + "y" + down arrow
+		z axis +: "Shift" + "z" + up arrow
+		z axis -: "Shift" + "z" + down arrow
+		 
+
+//Other Features
+
+1. <Object Support>
+
+	(when no object select)
+	right click menu:
+		1. cube
+		2. sphere
+		3. cone
+		4. cylinder
+		5. torus
+		6. teapot
+		7. tetrahedron
+		8. octahedron
+		9. dodecahedron
+		0. icosahedron
+
+2. <Lighting>
+	
+	x axis ++: "x" + up arrow
+	x axis --: "x" + down arrow
+	
+	y axis ++: "y" + up arrow
+	y axis --: "y" + down arrow
+	
+	z axis ++: "z" + up arrow
+	z axis --: "z" + down arrow
+
+3. <Materials>
+	
+	change current drawing material: //need to decribe what materials they are
+		material 1: "1"  
+		material 2: "2"
+		material 3: "3"
+		material 4: "4" 
+		material 5: "5"
+		
+	Apply the current material to the object selected: "m"
+	
+4. <Scene Rotation>
+	rotate scene about its centre in y and z axes: 
+	
+	rotate in y+: "d"
+	rotate in y-: "a"
+	
+	rotate in z+: "w"
+	rotate in z-: "s"
+	
+5. <Reset>
+	 
+	 set scene empty: "r" "R"
+	 
+6. <Load/Save>
+
+	save current scene to file: "S"
+	load previous saved scene file: "L"
+	
+//Extra Features:
+	
+8. <Texture Mapping>
+	
+	three texture mapping materials: 
+		(no object selected) right click menu: 
+			texture 1
+			texture 2
+			texture 3
+	
+
