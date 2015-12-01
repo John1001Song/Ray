@@ -2,7 +2,7 @@ Key manual:
 
 //Basic Features:
 
-<Add/Delete>
+<Add/Delete>  aaa
 
 	Adding Objects: "E" "e" 
 
