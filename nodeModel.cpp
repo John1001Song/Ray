@@ -19,18 +19,27 @@ NodeModel::NodeModel(ModelType whatType){	//constructor
 //as the node moves down through it, we want to perform down action
 //which in this case means drawing the model
 void NodeModel::nodeSpecificCodeDown(){
-	switch (modelType){
-	case Sphere:
-		glutSolidSphere(1, 12, 10);
-		break;
-	case Cube:
-		glutSolidCube(1);
-		break;
-	case Teapot:
-		glutSolidTeapot(1);
-		break;
-	case Custom:
-		//own mesh thing
-		break;
+    switch (modelType){
+        case Sphere:
+            glutSolidSphere(1, 12, 10);
+            break;
+        case Cube:
+            glutSolidCube(1);
+            break;
+        case Teapot:
+            glutSolidTeapot(1);
+            break;
+        case Cone:
+            glutSolidCone(1, 1, 50, 50);
+            break;
+        case Dodecahedron:
+            glutSolidDodecahedron();
+            break;
+        case Icosahedron:
+            glutSolidIcosahedron();
+            break;
+        case Custom:
+            //own mesh thing
+            break;
 	}
 }

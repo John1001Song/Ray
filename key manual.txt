@@ -43,11 +43,11 @@ Key manual:
 		1. cube
 		2. sphere
 		3. cone
-		4. cylinder
-		5. torus
+        //4. cylinder
+		//5. torus
 		6. teapot
-		7. tetrahedron
-		8. octahedron
+		//7. tetrahedron
+		//8. octahedron
 		9. dodecahedron
 		0. icosahedron
 

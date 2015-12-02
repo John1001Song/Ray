@@ -17,6 +17,9 @@ enum ModelType{
 	Sphere,
 	Cube,
 	Teapot,
+    Cone,
+    Dodecahedron,
+    Icosahedron,
 	Custom
 };
 

@@ -13,10 +13,10 @@
 #include "node.h"
 
 enum MaterialType{
-    Plastic,
-    Metal,
-    Paper,
-    Cotton,
+    CyanPlastic,//cyan plastic
+    Gold,//gold
+    Jade,
+    YellowRubber,
     Random
 };
 
