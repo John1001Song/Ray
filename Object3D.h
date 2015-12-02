@@ -24,6 +24,9 @@ public:
     //deconstructor
     ~Object3D();
     
+    //Object ID
+    int ObjectID;
+    
     //Object position
     float pos[3];
     

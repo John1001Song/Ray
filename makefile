@@ -25,7 +25,7 @@ else
 endif
 
 #change the 't1' name to the name you want to call your application
-PROGRAM_NAME= main 
+PROGRAM_NAME= SimpleSceneGraph
 
 #run target to compile and build, and then launch the executable
 run: $(PROGRAM_NAME)
@@ -36,9 +36,7 @@ run: $(PROGRAM_NAME)
 #ie. boilerplateClass.o and yourFile.o
 #make will automatically know that the objectfile needs to be compiled
 #form a cpp source file and find it itself :)
-$(PROGRAM_NAME):
-
-main: main.o
+$(PROGRAM_NAME): main.o node.o nodeGroup.o nodeModel.o nodeTransform.o sceneGraph.o
 	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
 
 clean:
