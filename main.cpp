@@ -21,6 +21,20 @@ float pos[] = {0,1,0};
 float camPos[] = {2.5, 2.5, 5};
 float angle = 0.0f;
 
+//lighting
+int countL=0;
+int light=0;
+// light 0
+float position0[4] = {600,50,0, 1};
+float amb0[4] = {1, 1, 1, 1};
+float diff0[4] = {1,0,0, 1};
+float spec0[4] = {0,0,1, 1};
+// light 1
+float position1[4] = {0,50,600, 1};
+float amb1[4] = {1, 1, 1, 1};
+float diff1[4] = {1,0,0, 1};
+float spec1[4] = {0,0,1, 1};
+
 //node ids
 int masterID = 0;
 int getID(){
@@ -67,6 +81,96 @@ void initGraph(){
 	//DURING RUNTIME
 }
 
+//light controller
+void lightC(int light,int dir,int unit){
+    //control light0
+    if(light==0){
+        //which direction (x,y,z)
+        switch(dir){
+                //x
+            case 0:
+                // x up
+                if(unit==1 && position0[0]<=300){
+                    position0[0]+=10;
+                    glLightfv(GL_LIGHT0,GL_POSITION,position0);
+                    
+                }//x down
+                else if(unit==0 && position0[0]>=-300){
+                    position0[0]-=10;
+                    glLightfv(GL_LIGHT0,GL_POSITION,position0);
+                }
+                //printf("x pos: %f \n",position0[0]);
+                //y
+            case 1:
+                //y up
+                if(unit==1 && position0[1]<=300){
+                    position0[1]+=10;
+                    glLightfv(GL_LIGHT0,GL_POSITION,position0);
+                    
+                }//y down
+                else if(unit==0 && position0[1]>=-300){
+                    position0[1]-=10;
+                    glLightfv(GL_LIGHT0,GL_POSITION,position0);
+                }
+                
+                
+                //z
+            case 2:
+                //z up
+                if(unit==1 && position0[2]<=300){
+                    position0[2]+=10;
+                    glLightfv(GL_LIGHT0,GL_POSITION,position0);
+                    
+                }//z down
+                else if(unit==0 && position0[2]>=-300){
+                    position0[2]-=10;
+                    glLightfv(GL_LIGHT0,GL_POSITION,position0);
+                }
+        }
+    }else if(light==1){
+        switch(dir){
+                //x
+            case 0:
+                // x up
+                if(unit==1 && position1[0]<=300){
+                    position1[0]+=10;
+                    glLightfv(GL_LIGHT1,GL_POSITION,position1);
+                    
+                }//x down
+                else if(unit==0 && position1[0]>=-300){
+                    position1[0]-=10;
+                    glLightfv(GL_LIGHT1,GL_POSITION,position1);
+                }
+                //printf("x pos: %f \n",position1[0]);
+                //y
+            case 1:
+                //y up
+                if(unit==1 && position1[1]<=300){
+                    position0[1]+=10;
+                    glLightfv(GL_LIGHT1,GL_POSITION,position1);
+                    
+                }//y down
+                else if(unit==0 && position1[1]>=-300){
+                    position0[1]-=10;
+                    glLightfv(GL_LIGHT1,GL_POSITION,position1);
+                }
+                
+                //z
+            case 2:
+                //z up
+                if(unit==1 && position0[2]<=300){
+                    position0[2]+=10;
+                    glLightfv(GL_LIGHT0,GL_POSITION,position0);
+                    
+                }//z down
+                else if(unit==0 && position0[2]>=-300){
+                    position0[2]-=10;
+                    glLightfv(GL_LIGHT0,GL_POSITION,position0);
+                }   
+        }
+        
+    }
+}
 
 //callbacks
 void keyboard(unsigned char key, int x, int y)
@@ -79,12 +183,16 @@ void keyboard(unsigned char key, int x, int y)
 			break;
         case '1':
         {
+            SG->goToRoot();
+            SG->goToChild(0);
             NodeModel *m = new NodeModel(Cube);
             SG->insertChildNodeHere(m);
             break;
         }
         case '2':
         {
+            SG->goToRoot();
+            SG->goToChild(0);
             NodeModel *m = new NodeModel(Sphere);
             SG->insertChildNodeHere(m);
             break;
@@ -92,6 +200,8 @@ void keyboard(unsigned char key, int x, int y)
             
         case '3':
         {
+            SG->goToRoot();
+            SG->goToChild(0);
             NodeModel *m = new NodeModel(Teapot);
             SG->insertChildNodeHere(m);
             break;
@@ -99,6 +209,8 @@ void keyboard(unsigned char key, int x, int y)
             
         case '4':
         {
+            SG->goToRoot();
+            SG->goToChild(0);
             NodeModel *m = new NodeModel(Cone);
             SG->insertChildNodeHere(m);
             break;
@@ -106,6 +218,8 @@ void keyboard(unsigned char key, int x, int y)
             
         case '5':
         {
+            SG->goToRoot();
+            SG->goToChild(0);
             NodeModel *m = new NodeModel(Dodecahedron);
             SG->insertChildNodeHere(m);
             break;
@@ -113,6 +227,8 @@ void keyboard(unsigned char key, int x, int y)
             
         case '6':
         {
+            SG->goToRoot();
+            SG->goToChild(0);
             NodeModel *m = new NodeModel(Icosahedron);
             SG->insertChildNodeHere(m);
             break;
@@ -120,12 +236,88 @@ void keyboard(unsigned char key, int x, int y)
             
         case 'm':
         {
-            SG->goToChild(0);
             NodeMaterial *m = new NodeMaterial(MaterialType::Jade);
             SG->insertChildNodeHere(m);
             break;
         }
-	}
+        
+    }
+    
+            //turn on / off the light
+            if (key=='o'||key=='O'){
+                switch(countL){
+                    case 0:
+                        glEnable(GL_LIGHTING);
+                        glEnable(GL_LIGHT0);
+                        glEnable(GL_LIGHT1);
+                        glEnable(GL_DEPTH_TEST);
+                        
+                        glLightfv(GL_LIGHT0, GL_POSITION, position0);
+                        glLightfv(GL_LIGHT0, GL_DIFFUSE, diff0);
+                        glLightfv(GL_LIGHT0, GL_AMBIENT, amb0);
+                        glLightfv(GL_LIGHT0, GL_SPECULAR, spec0);
+                        
+                        glLightfv(GL_LIGHT1, GL_POSITION, position1);
+                        glLightfv(GL_LIGHT1, GL_DIFFUSE, diff1);
+                        glLightfv(GL_LIGHT1, GL_AMBIENT, amb1);
+                        glLightfv(GL_LIGHT1, GL_SPECULAR, spec1);
+                        
+                        countL++;
+                        break;
+                        // printf("light%f \n", light);
+                    case 1:
+                        glDisable(GL_LIGHTING);
+                        glDisable(GL_LIGHT0);
+                        glDisable(GL_LIGHT1);
+                        countL=0;
+                        break;
+                }
+            }
+            //light controller switch light
+            if (key=='0'){
+                if(light==0){
+                    light++;
+                }else{light=0;}
+            }
+            //switch from x,y,z axis
+            //x-axis
+            //x + shift, x ++
+            //x + alt, x --
+            if (key=='x'||key=='X'){
+                int mod= glutGetModifiers();
+                if (mod== GLUT_ACTIVE_SHIFT){
+                    lightC(light,0,1);
+                }
+                if (mod== GLUT_ACTIVE_ALT){
+                    lightC(light,0,0);
+                }
+            }
+            //y-axis
+            //y + shift,y ++
+            //y + alt,y--
+            if (key=='y'||key=='Y'){
+                int mod= glutGetModifiers();
+                if (mod== GLUT_ACTIVE_SHIFT){
+                    lightC(light,1,1);
+                }
+                if (mod== GLUT_ACTIVE_ALT){
+                    lightC(light,1,0);
+                }
+            }
+            //z-axis
+            //z + shift, z++
+            //z + alt, z--
+            if (key=='z'||key=='Z'){
+                int mod= glutGetModifiers();
+                if (mod== GLUT_ACTIVE_SHIFT){
+                    lightC(light,2,1);
+                }
+                if (mod== GLUT_ACTIVE_ALT){
+                    lightC(light,2,0);
+                }
+            }
+            
+	
 	glutPostRedisplay();
 }
 
@@ -181,6 +373,7 @@ void init(void)
 	//initializing our world
 	initGraph();
 }
+
 
 
 /* display function - GLUT display callback function
