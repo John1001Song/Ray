@@ -8,6 +8,8 @@ Node::Node(){	//constructor
 	children = new vector<Node*>();
 	parent = 0;
 	currentChild = 0;
+    nodePos3D.x = 0; nodePos3D.y = 0; nodePos3D.z = 0;
+    nodePos4D.x = 0; nodePos4D.y = 0; nodePos4D.z = 0; nodePos4D.w = 1;
 	printf("node init done\n");
 }
 

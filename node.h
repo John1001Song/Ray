@@ -6,6 +6,7 @@
 //Nodes
 
 #include <vector>
+#include "structs.h"
 using namespace std;
 
 extern int getID();
@@ -30,7 +31,9 @@ public:
 	vector<Node*> *children;
 	Node* parent;
 	int currentChild;
-
+    Vector3D nodePos3D;
+    Vector4D nodePos4D;
+    
 	void draw();
 	virtual void nodeSpecificCodeDown();
 	virtual void nodeSpecificCodeUp();

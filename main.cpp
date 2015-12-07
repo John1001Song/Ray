@@ -27,13 +27,13 @@ int light=0;
 // light 0
 float position0[4] = {600,50,0, 1};
 float amb0[4] = {1, 1, 1, 1};
-float diff0[4] = {1,0,0, 1};
-float spec0[4] = {0,0,1, 1};
+float diff0[4] = {1,1,1, 1};
+float spec0[4] = {1,1,1, 1};
 // light 1
 float position1[4] = {0,50,600, 1};
 float amb1[4] = {1, 1, 1, 1};
-float diff1[4] = {1,0,0, 1};
-float spec1[4] = {0,0,1, 1};
+float diff1[4] = {1,1,1, 1};
+float spec1[4] = {1,1,1, 1};
 
 //node ids
 int masterID = 0;
@@ -172,6 +172,8 @@ void lightC(int light,int dir,int unit){
     }
 }
 
+Vector3D temp2Vec3D = {1,1,1};
+
 //callbacks
 void keyboard(unsigned char key, int x, int y)
 {
@@ -233,7 +235,8 @@ void keyboard(unsigned char key, int x, int y)
             SG->insertChildNodeHere(m);
             break;
         }
-            
+        
+        //press 'm' to get surface with Jade
         case 'm':
         {
             NodeMaterial *m = new NodeMaterial(MaterialType::Jade);
@@ -241,6 +244,50 @@ void keyboard(unsigned char key, int x, int y)
             break;
         }
         
+        //pree '7' to get Gold surface
+        case '7':
+        {
+            NodeMaterial *m = new NodeMaterial(Gold);
+            SG->insertChildNodeHere(m);
+            break;
+        }
+        
+        //press 8 to get CyanPlastic surface
+        case '8':
+        {
+            NodeMaterial *m = new NodeMaterial(CyanPlastic);
+            SG->insertChildNodeHere(m);
+            break;
+        }
+        
+        //press 9 to get YellowRubber surface
+        case '9':
+        {
+            NodeMaterial *m = new NodeMaterial(YellowRubber);
+            SG->insertChildNodeHere(m);
+            break;
+        }
+        
+        //press n to get a random surface. Try to press many times and you will get a surprice surface!
+        case 'n':
+        {
+            NodeMaterial *m = new NodeMaterial(Random);
+            SG->insertChildNodeHere(m);
+            break;
+        }
+        
+        case '-':
+        {
+            SG->goToParent();
+            temp2Vec3D.x++;
+            //Vector3D tempVec3D = {1, 1, 1};
+            NodeTransform *T = new NodeTransform(Translate, temp2Vec3D);
+            SG->insertChildNodeHere(T);
+            printf("%f\n", temp2Vec3D.x);
+            break;
+        }
+            
+            
     }
     
             //turn on / off the light
