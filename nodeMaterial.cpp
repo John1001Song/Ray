@@ -6,7 +6,7 @@
 //  Copyright © 2015 Jinyue Song. All rights reserved.
 //
 
-#include "nodeMaterial.hpp"
+#include "nodeMaterial.h"
 #include <stdio.h> //needed for printf command
 #include <time.h> //needed for random number
 #include <stdlib.h>

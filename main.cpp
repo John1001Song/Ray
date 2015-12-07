@@ -32,6 +32,7 @@ int getID(){
 #include "nodeGroup.h"
 #include "nodeModel.h"
 #include "nodeTransform.h"
+#include "nodeMaterial.h"
 SceneGraph *SG;
 
 //function which will populate a sample graph 
