@@ -25,6 +25,9 @@ float angle = 0.0f;
 double startI[] ={0,0,0};
 double endI[]={1,1,1};
 
+//flag used to draw axis
+int flag_axis = 0;
+
 //lighting
 int countL=0;
 int light=0;
@@ -283,6 +286,10 @@ void keyboard(unsigned char key, int x, int y)
             break;
         }
             
+        case 'h':
+            flag_axis++;
+            break;
+            
     }
     
             //turn on / off the light
@@ -362,6 +369,30 @@ void keyboard(unsigned char key, int x, int y)
 	
 	glutPostRedisplay();
 }
+
+/* drawAxis() -- draws an axis at the origin of the coordinate system
+ *   red = +X axis, green = +Y axis, blue = +Z axis
+ */
+//draw axis to find XYZ direction
+void drawAxis()
+{
+    glBegin(GL_LINES);
+    glColor3f(1, 0, 0);
+    glVertex3f(0,0,0);
+    glVertex3f(500,0,0);
+    
+    glColor3f(0,1,0);
+    glVertex3f(0,0,0);
+    glVertex3f(0,500,0);
+    
+    glColor3f(0,0,1);
+    glVertex3f(0,0,0);
+    glVertex3f(0,0,500);
+    glEnd();
+}
+
+
+//borrow the following code Intersect from Thomas
 
 //function which preforms intersection test
 bool Intersect(int x, int y){
@@ -537,6 +568,11 @@ void display(void)
 	//draw the sceneGraph
 	SG->draw();
 
+    //draw axis or not
+    if (flag_axis%2 == 1) {
+        drawAxis();
+    }
+    
 	glutSwapBuffers();
 }
 
