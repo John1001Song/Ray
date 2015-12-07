@@ -11,9 +11,9 @@
 #endif
 
 NodeModel::NodeModel(ModelType whatType){	//constructor
-	nodeType = model;
-	modelType = whatType;
-	isDrawable = true;
+    nodeType = model;
+    modelType = whatType;
+    isDrawable = true;
 }
 
 //as the node moves down through it, we want to perform down action
@@ -41,5 +41,5 @@ void NodeModel::nodeSpecificCodeDown(){
         case Custom:
             //own mesh thing
             break;
-	}
+    }
 }

@@ -58,9 +58,9 @@ void initGraph(){
 	//MODEL
 	//we will now add a teapot model to the graph as a child of the
 	//transformation node
-	NodeModel *M1 = new NodeModel(Teapot);
+//	NodeModel *M1 = new NodeModel(Teapot);
 	//insert the node into the graph
-	SG->insertChildNodeHere(M1);
+//	SG->insertChildNodeHere(M1);
 
 
 	//THE SAME FLOW CAN BE USED TO DYNAMICALLY ADD NODES
@@ -77,6 +77,54 @@ void keyboard(unsigned char key, int x, int y)
 		case 27:
 			exit (0);
 			break;
+        case '1':
+        {
+            NodeModel *m = new NodeModel(Cube);
+            SG->insertChildNodeHere(m);
+            break;
+        }
+        case '2':
+        {
+            NodeModel *m = new NodeModel(Sphere);
+            SG->insertChildNodeHere(m);
+            break;
+        }
+            
+        case '3':
+        {
+            NodeModel *m = new NodeModel(Teapot);
+            SG->insertChildNodeHere(m);
+            break;
+        }
+            
+        case '4':
+        {
+            NodeModel *m = new NodeModel(Cone);
+            SG->insertChildNodeHere(m);
+            break;
+        }
+            
+        case '5':
+        {
+            NodeModel *m = new NodeModel(Dodecahedron);
+            SG->insertChildNodeHere(m);
+            break;
+        }
+            
+        case '6':
+        {
+            NodeModel *m = new NodeModel(Icosahedron);
+            SG->insertChildNodeHere(m);
+            break;
+        }
+            
+        case 'm':
+        {
+            SG->goToChild(0);
+            NodeMaterial *m = new NodeMaterial(MaterialType::Jade);
+            SG->insertChildNodeHere(m);
+            break;
+        }
 	}
 	glutPostRedisplay();
 }

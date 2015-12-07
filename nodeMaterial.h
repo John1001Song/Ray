@@ -26,7 +26,6 @@ public:
     MaterialType materialType;
     
     virtual void nodeSpecificCodeDown();
-    
 };
 
 #endif /* nodeMaterial_h */

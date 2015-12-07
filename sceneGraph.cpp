@@ -1,6 +1,5 @@
 #include "sceneGraph.h"
 #include "node.h"
-#include "node.cpp"
 #include <stdio.h>
 
 SceneGraph::SceneGraph(){
@@ -40,18 +39,7 @@ void SceneGraph::insertChildNodeHere(Node *node){
 
 //deletes the current node, relinking the children as necessary
 void SceneGraph::deleteThisNode(){
-    //this function is to delete the model-node(like cube, cone or ball).
-    //Other non-model nodes (like transformation or material) are stored in current model-node vector *children
-    //non-model nodes are used to move the object or change object's apperance etc.
-    
-    //get current node's non-model node's size. For example it is about how many steps the object translated, what material is used on the object etc
-    int childrenSize = currentNode->children->size();
-    //delete those operations, which are stored in vector *children
-    for (int i = 0; i < childrenSize; i++) {
-        delete currentNode->children->at(i);
-    }
-    //last step to delete the current node
-    delete currentNode;
+	//TODO
 }
 
 //draw the scenegraph

@@ -16,8 +16,8 @@ enum NodeType{
 	root,
 	group,
 	transformation,
-	model,
-    material
+    material,
+	model
 };
 
 class Node{
