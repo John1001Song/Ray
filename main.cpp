@@ -21,6 +21,10 @@ float pos[] = {0,1,0};
 float camPos[] = {2.5, 2.5, 5};
 float angle = 0.0f;
 
+//array used for intersect test
+double startI[] ={0,0,0};
+double endI[]={1,1,1};
+
 //lighting
 int countL=0;
 int light=0;
@@ -277,7 +281,7 @@ void keyboard(unsigned char key, int x, int y)
             NodeMaterial *m = new NodeMaterial(Random);
             SG->insertChildNodeHere(m);
             break;
-        }       
+        }
             
     }
     
@@ -359,6 +363,95 @@ void keyboard(unsigned char key, int x, int y)
 	glutPostRedisplay();
 }
 
+//function which preforms intersection test
+bool Intersect(int x, int y){
+    printf("%i, %i\n", x, y);
+    
+    //allocate matricies memory
+    double matModelView[16], matProjection[16];
+    int viewport[4];
+    
+    //vectors
+    
+    
+    //grab the matricies
+    glGetDoublev(GL_MODELVIEW_MATRIX, matModelView);
+    glGetDoublev(GL_PROJECTION_MATRIX, matProjection);
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    
+    //unproject the values
+    double winX = (double)x;
+    double winY = viewport[3] - (double)y;
+    
+    // get point on the 'near' plane (third param is set to 0.0)
+    gluUnProject(winX, winY, 0.0, matModelView, matProjection,
+                 viewport, &startI[0], &startI[1], &startI[2]);
+    
+    // get point on the 'far' plane (third param is set to 1.0)
+    gluUnProject(winX, winY, 1.0, matModelView, matProjection,
+                 viewport, &endI[0], &endI[1], &endI[2]);
+    
+    
+    printf("near point: %f,%f,%f\n", startI[0], startI[1], startI[2]);
+    printf("far point: %f,%f,%f\n", endI[0], endI[1], endI[2]);
+    
+    //check for intersection against sphere!
+    //hurray!
+    
+    double A, B, C;
+    
+    double R0x, R0y, R0z;
+    double Rdx, Rdy, Rdz;
+    
+    R0x = startI[0];
+    R0y = startI[1];
+    R0z = startI[2];
+    
+    Rdx = endI[0] - startI[0];
+    Rdy = endI[1] - startI[1];
+    Rdz = endI[2] - startI[2];
+    
+    //magnitude!
+    double M = sqrt(Rdx*Rdx + Rdy*Rdy + Rdz* Rdz);
+    
+    //unit vector!
+    Rdx /= M;
+    Rdy /= M;
+    Rdz /= M;
+    
+    //A = Rd dot Rd
+    A = Rdx*Rdx + Rdy*Rdy + Rdz*Rdz;
+    
+    double Btempx, Btempy, Btempz;
+    Btempx = R0x;
+    Btempy =  R0y;
+    Btempz =  R0z;
+    
+    B = Btempx * Rdx + Btempy * Rdy + Btempz *Rdz;
+    B *= 2.0;
+    
+    C = R0x*R0x + R0y*R0y + R0z* R0z - 1;
+    
+    
+    double sq = B*B  - 4*A*C;
+    
+    double t0 = 0, t1 = 0;
+    
+    if(sq < 0)
+        printf("no Intersection!!!\n");
+    else{
+        t0 = ((-1) * B + sqrt(sq))/(2*A);
+        t1 = ((-1) * B - sqrt(sq))/(2*A);
+        
+        printf("Intersection at: t = %f, and t = %f\n", t0, t1);
+    }
+    
+    
+    return false; //else returns false
+}
+
+
+
 void special(int key, int x, int y)
 {
 	/* arrow key presses move the camera */
@@ -421,7 +514,11 @@ void init(void)
 	initGraph();
 }
 
-
+void mouse(int button, int state, int x, int y){
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        Intersect(x, y);
+    }
+}
 
 /* display function - GLUT display callback function
  *		clears the screen, sets the camera position, draws the ground plane and movable box
@@ -459,6 +556,7 @@ int main(int argc, char** argv)
 	glutDisplayFunc(display);	//registers "display" as the display callback function
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(special);
+    glutMouseFunc(mouse);
 
 	init();
 
