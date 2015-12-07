@@ -16,7 +16,7 @@
 #include <math.h>
 
 #include "structs.h"
-
+//position of camera
 float pos[] = {0,1,0};
 float camPos[] = {2.5, 2.5, 5};
 float angle = 0.0f;
@@ -54,7 +54,6 @@ void initGraph(){
 	//temporary place which holds out values
 	Vector3D tempVec3;
 
-
 	//TRANSFORMATION
 	//a tranlation transformation node
 	//how much translation
@@ -72,9 +71,7 @@ void initGraph(){
 	//MODEL
 	//we will now add a teapot model to the graph as a child of the
 	//transformation node
-//	NodeModel *M1 = new NodeModel(Teapot);
 	//insert the node into the graph
-//	SG->insertChildNodeHere(M1);
 
 
 	//THE SAME FLOW CAN BE USED TO DYNAMICALLY ADD NODES
@@ -172,8 +169,6 @@ void lightC(int light,int dir,int unit){
     }
 }
 
-Vector3D temp2Vec3D = {1,1,1};
-
 //callbacks
 void keyboard(unsigned char key, int x, int y)
 {
@@ -183,6 +178,8 @@ void keyboard(unsigned char key, int x, int y)
 		case 27:
 			exit (0);
 			break;
+        
+        //press key "1" to get a cube at position (0, 0, 0)
         case '1':
         {
             SG->goToRoot();
@@ -191,6 +188,8 @@ void keyboard(unsigned char key, int x, int y)
             SG->insertChildNodeHere(m);
             break;
         }
+        
+        //press "2" to get a Sphere
         case '2':
         {
             SG->goToRoot();
@@ -200,6 +199,7 @@ void keyboard(unsigned char key, int x, int y)
             break;
         }
             
+        //press "3" to get a Teapot
         case '3':
         {
             SG->goToRoot();
@@ -208,7 +208,8 @@ void keyboard(unsigned char key, int x, int y)
             SG->insertChildNodeHere(m);
             break;
         }
-            
+         
+        //press "4" to get a Cone
         case '4':
         {
             SG->goToRoot();
@@ -217,7 +218,8 @@ void keyboard(unsigned char key, int x, int y)
             SG->insertChildNodeHere(m);
             break;
         }
-            
+           
+        //press "5" to get a Dodecahedron
         case '5':
         {
             SG->goToRoot();
@@ -226,20 +228,13 @@ void keyboard(unsigned char key, int x, int y)
             SG->insertChildNodeHere(m);
             break;
         }
-            
+           
+        //press "6" to get Icosahedron
         case '6':
         {
             SG->goToRoot();
             SG->goToChild(0);
             NodeModel *m = new NodeModel(Icosahedron);
-            SG->insertChildNodeHere(m);
-            break;
-        }
-        
-        //press 'm' to get surface with Jade
-        case 'm':
-        {
-            NodeMaterial *m = new NodeMaterial(MaterialType::Jade);
             SG->insertChildNodeHere(m);
             break;
         }
@@ -268,25 +263,21 @@ void keyboard(unsigned char key, int x, int y)
             break;
         }
         
+        //press 'm' to get surface with Jade
+        case 'm':
+        {
+            NodeMaterial *m = new NodeMaterial(MaterialType::Jade);
+            SG->insertChildNodeHere(m);
+            break;
+        }
+            
         //press n to get a random surface. Try to press many times and you will get a surprice surface!
         case 'n':
         {
             NodeMaterial *m = new NodeMaterial(Random);
             SG->insertChildNodeHere(m);
             break;
-        }
-        
-        case '-':
-        {
-            SG->goToParent();
-            temp2Vec3D.x++;
-            //Vector3D tempVec3D = {1, 1, 1};
-            NodeTransform *T = new NodeTransform(Translate, temp2Vec3D);
-            SG->insertChildNodeHere(T);
-            printf("%f\n", temp2Vec3D.x);
-            break;
-        }
-            
+        }       
             
     }
     
@@ -396,7 +387,16 @@ void special(int key, int x, int y)
 		case GLUT_KEY_END:
 			camPos[1] -= 0.1;
 			break;
-
+            
+        case GLUT_KEY_F5:
+        {
+            Vector3D tempVec3D = {1,1,1};
+            NodeTransform *T = new NodeTransform(Translate, tempVec3D);
+            SG->goToChild(0);
+            SG->insertChildNodeHere(T);
+            SG->goToParent();
+            break;
+        }
 	}
 	glutPostRedisplay();
 }
