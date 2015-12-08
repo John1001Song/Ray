@@ -28,14 +28,13 @@ NodeMaterial::NodeMaterial(MaterialType whatType){
     isDrawable = true;
 }
 
-float m_amb[4];
-float m_dif[4];
-float m_spec[4];
-float shiny;
-
 void NodeMaterial::nodeSpecificCodeDown(){
     switch (materialType) {
         case CyanPlastic:
+            float m_amb[4];
+            float m_dif[4];
+            float m_spec[4];
+            float shiny;
             m_amb[0] = 0; m_amb[1] = 0.1; m_amb[2] = 0.06; m_amb[3] = 1;
             m_dif[0] = 0.0; m_dif[1] = 0.50980392; m_dif[2] = 0.50980392; m_dif[3] = 1;
             m_spec[0] = 0.50196078; m_spec[1] = 0.50196078; m_spec[2] = 0.50196078; m_spec[3] = 1;

@@ -28,7 +28,8 @@ public:
 	NodeModel(ModelType whatType);	//constructor
 	ModelType modelType;
 
-	virtual void nodeSpecificCodeDown();
+    virtual void nodeSpecificCodeDown();
+	virtual void nodeSpecificCodeUp();
 };
 
 #endif

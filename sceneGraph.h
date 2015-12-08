@@ -18,9 +18,9 @@ public:
 	void draw();
 
     
-    
-private:
-	Node *currentNode;
+    Node *currentNode;
+//private:
+	
 	Node *rootNode;
 };
 

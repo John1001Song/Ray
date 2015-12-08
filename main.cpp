@@ -49,6 +49,7 @@ int getID(){
 }
 
 //sceneGraph
+#include "node.h"
 #include "sceneGraph.h"
 #include "nodeGroup.h"
 #include "nodeModel.h"
@@ -189,60 +190,60 @@ void keyboard(unsigned char key, int x, int y)
         //press key "1" to get a cube at position (0, 0, 0)
         case '1':
         {
-            SG->goToRoot();
-            SG->goToChild(0);
             NodeModel *m = new NodeModel(Cube);
-            SG->insertChildNodeHere(m);
+            m->parent = SG->rootNode->children->at(0);
+            SG->rootNode->children->at(0)->children->push_back(m);
+            SG->currentNode = m;
             break;
         }
         
         //press "2" to get a Sphere
         case '2':
         {
-            SG->goToRoot();
-            SG->goToChild(0);
             NodeModel *m = new NodeModel(Sphere);
-            SG->insertChildNodeHere(m);
+            m->parent = SG->rootNode->children->at(0);
+            SG->rootNode->children->at(0)->children->push_back(m);
+            SG->currentNode = m;
             break;
         }
             
         //press "3" to get a Teapot
         case '3':
         {
-            SG->goToRoot();
-            SG->goToChild(0);
             NodeModel *m = new NodeModel(Teapot);
-            SG->insertChildNodeHere(m);
+            m->parent = SG->rootNode->children->at(0);
+            SG->rootNode->children->at(0)->children->push_back(m);
+            SG->currentNode = m;
             break;
         }
          
         //press "4" to get a Cone
         case '4':
         {
-            SG->goToRoot();
-            SG->goToChild(0);
             NodeModel *m = new NodeModel(Cone);
-            SG->insertChildNodeHere(m);
+            m->parent = SG->rootNode->children->at(0);
+            SG->rootNode->children->at(0)->children->push_back(m);
+            SG->currentNode = m;
             break;
         }
            
         //press "5" to get a Dodecahedron
         case '5':
         {
-            SG->goToRoot();
-            SG->goToChild(0);
             NodeModel *m = new NodeModel(Dodecahedron);
-            SG->insertChildNodeHere(m);
+            m->parent = SG->rootNode->children->at(0);
+            SG->rootNode->children->at(0)->children->push_back(m);
+            SG->currentNode = m;
             break;
         }
            
         //press "6" to get Icosahedron
         case '6':
         {
-            SG->goToRoot();
-            SG->goToChild(0);
             NodeModel *m = new NodeModel(Icosahedron);
-            SG->insertChildNodeHere(m);
+            m->parent = SG->rootNode->children->at(0);
+            SG->rootNode->children->at(0)->children->push_back(m);
+            SG->currentNode = m;
             break;
         }
         
@@ -511,16 +512,61 @@ void special(int key, int x, int y)
 		case GLUT_KEY_END:
 			camPos[1] -= 0.1;
 			break;
-            
-        case GLUT_KEY_F5:
+        
+        //Object moves X axis+
+        case GLUT_KEY_F1:
         {
-            Vector3D tempVec3D = {1,1,1};
+            Vector3D tempVec3D = {.1,0,0};
             NodeTransform *T = new NodeTransform(Translate, tempVec3D);
-            SG->goToChild(0);
             SG->insertChildNodeHere(T);
-            SG->goToParent();
             break;
         }
+         
+        //Object moves X axis-
+        case GLUT_KEY_F2:
+        {
+            Vector3D tempVec3D = {-0.1,0,0};
+            NodeTransform *T = new NodeTransform(Translate, tempVec3D);
+            SG->insertChildNodeHere(T);
+            break;
+        }
+        
+        //Object moves Y axis+
+        case GLUT_KEY_F3:
+        {
+            Vector3D tempVec3D = {0,0.1,0};
+            NodeTransform *T = new NodeTransform(Translate, tempVec3D);
+            SG->insertChildNodeHere(T);
+            break;
+        }
+        
+        //Object moves Y axis-
+        case GLUT_KEY_F4:
+        {
+            Vector3D tempVec3D = {0,-0.1,0};
+            NodeTransform *T = new NodeTransform(Translate, tempVec3D);
+            SG->insertChildNodeHere(T);
+            break;
+        }
+        
+        //Object moves Z axis+
+        case GLUT_KEY_F5:
+        {
+            Vector3D tempVec3D = {0,0,0.1};
+            NodeTransform *T = new NodeTransform(Translate, tempVec3D);
+            SG->insertChildNodeHere(T);
+            break;
+        }
+        
+        //Object moves Z axis-
+        case GLUT_KEY_F6:
+        {
+            Vector3D tempVec3D = {0,0,-0.1};
+            NodeTransform *T = new NodeTransform(Translate, tempVec3D);
+            SG->insertChildNodeHere(T);
+            break;
+        }
+        
 	}
 	glutPostRedisplay();
 }

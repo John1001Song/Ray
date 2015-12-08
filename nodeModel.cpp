@@ -19,6 +19,9 @@ NodeModel::NodeModel(ModelType whatType){	//constructor
 //as the node moves down through it, we want to perform down action
 //which in this case means drawing the model
 void NodeModel::nodeSpecificCodeDown(){
+    glPushMatrix();
+}
+void NodeModel::nodeSpecificCodeUp(){
     switch (modelType){
         case Sphere:
             glutSolidSphere(1, 12, 10);
@@ -30,7 +33,7 @@ void NodeModel::nodeSpecificCodeDown(){
             glutSolidTeapot(1);
             break;
         case Cone:
-            glutSolidCone(1, 1, 50, 50);
+            glutSolidCone(0.5, 1, 50, 50);
             break;
         case Dodecahedron:
             glutSolidDodecahedron();
@@ -42,4 +45,5 @@ void NodeModel::nodeSpecificCodeDown(){
             //own mesh thing
             break;
     }
+    glPopMatrix();
 }
