@@ -24,7 +24,7 @@ void NodeModel::nodeSpecificCodeDown(){
 void NodeModel::nodeSpecificCodeUp(){
     switch (modelType){
         case Sphere:
-            glutSolidSphere(1, 12, 10);
+            glutSolidSphere(.5, 12, 10);
             break;
         case Cube:
             glutSolidCube(1);

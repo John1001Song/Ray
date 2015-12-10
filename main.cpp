@@ -57,33 +57,65 @@ int getID(){
 #include "nodeMaterial.h"
 SceneGraph *SG;
 
-//function which will populate a sample graph 
+
+
+/* drawPolygon - takes 4 indices and an array of vertices
+ *   and draws a polygon using the vertices indexed by the indices
+ */
+
+
+//function which will populate a sample graph
 void initGraph(){
-	//temporary place which holds out values
-	Vector3D tempVec3;
-
-	//TRANSFORMATION
-	//a tranlation transformation node
-	//how much translation
-	tempVec3.x = 1;
-	tempVec3.y = 1;
-	tempVec3.z = 1;
-	//add the node as a child of root node
-	NodeTransform *T1 = new NodeTransform(Translate, tempVec3);
-	//insert the node into the graph
-	SG->insertChildNodeHere(T1);
-	//go to the child node
-	SG->goToChild(0);
-
-
-	//MODEL
-	//we will now add a teapot model to the graph as a child of the
-	//transformation node
-	//insert the node into the graph
-
-
-	//THE SAME FLOW CAN BE USED TO DYNAMICALLY ADD NODES
-	//DURING RUNTIME
+    
+    
+    
+    
+    //temporary place which holds out values
+    Vector3D tempVec3;
+    
+    //TRANSFORMATION
+    //a tranlation transformation node
+    //how much translation
+    tempVec3.x = 1;
+    tempVec3.y = 1;
+    tempVec3.z = 1;
+    //add the node as a child of root node
+    NodeTransform *T1 = new NodeTransform(Translate, tempVec3);
+    //insert the node into the graph
+    SG->insertChildNodeHere(T1);
+    
+    //create a cube and scale it to a platform
+    NodeModel *P = new NodeModel(Cube);
+    SG->insertChildNodeHere(P);
+    SG->currentNode = P;
+    //how much to scale
+    Vector3D scalVec3D = {10, .5, 10};
+    //Transformation: scale
+    NodeTransform *S = new NodeTransform(Scale, scalVec3D);
+    SG->insertChildNodeHere(S);
+    
+    //Platform material is Jade
+    NodeMaterial *PM = new NodeMaterial(Jade);
+    SG->insertChildNodeHere(PM);
+    
+    //move dowm the platform
+    Vector3D moveDowm = {0, -1.5, 0};
+    NodeTransform *MD = new NodeTransform(Translate, moveDowm);
+    SG->insertChildNodeHere(MD);
+        
+    //go back to root
+    SG->goToRoot();
+    //go to the child node and all objects are following the child node child(0)
+    SG->goToChild(0);
+    
+    
+    //MODEL
+    //we will now add a teapot model to the graph as a child of the
+    //transformation node
+    //insert the node into the graph
+    
+    //THE SAME FLOW CAN BE USED TO DYNAMICALLY ADD NODES
+    //DURING RUNTIME
 }
 
 //light controller
@@ -589,6 +621,8 @@ void init(void)
 	//add various nodes
 	//initializing our world
 	initGraph();
+    
+    
 }
 
 void mouse(int button, int state, int x, int y){
@@ -602,7 +636,6 @@ void mouse(int button, int state, int x, int y){
  */
 void display(void)
 {
-	float origin[3] = {0,0,0};
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
@@ -618,6 +651,8 @@ void display(void)
     if (flag_axis%2 == 1) {
         drawAxis();
     }
+    
+    
     
 	glutSwapBuffers();
 }
@@ -639,6 +674,8 @@ int main(int argc, char** argv)
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(special);
     glutMouseFunc(mouse);
+    
+    glEnable(GL_DEPTH_TEST);
 
 	init();
 
