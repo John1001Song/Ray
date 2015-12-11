@@ -236,6 +236,7 @@ void keyboard(unsigned char key, int x, int y)
             m->parent = SG->rootNode->children->at(0);
             SG->rootNode->children->at(0)->children->push_back(m);
             SG->currentNode = m;
+            
             break;
         }
             

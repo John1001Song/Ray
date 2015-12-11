@@ -42,7 +42,8 @@ void NodeModel::nodeSpecificCodeUp(){
             glutSolidIcosahedron();
             break;
         case Custom:
-            //own mesh thing
+            glColor3f(0, 1, 0);
+            glutWireCube(1);
             break;
     }
     glPopMatrix();
