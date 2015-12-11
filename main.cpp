@@ -16,6 +16,8 @@
 #include <math.h>
 
 #include "structs.h"
+
+
 //position of camera
 float pos[] = {0,1,0};
 float camPos[] = {2.5, 2.5, 5};
@@ -24,6 +26,11 @@ float angle = 0.0f;
 //array used for intersect test
 double startI[] ={0,0,0};
 double endI[]={1,1,1};
+
+//angle rotate
+float angleX=0;
+float angleY=0;
+float angleZ=0;
 
 //flag used to draw axis
 int flag_axis = 0;
@@ -45,7 +52,7 @@ float spec1[4] = {1,1,1, 1};
 //node ids
 int masterID = 0;
 int getID(){
-	return masterID++;
+    return masterID++;
 }
 
 //sceneGraph
@@ -89,7 +96,7 @@ void initGraph(){
     SG->insertChildNodeHere(P);
     SG->currentNode = P;
     //how much to scale
-    Vector3D scalVec3D = {10, .5, 10};
+    Vector3D scalVec3D = {100, .5, 100};
     //Transformation: scale
     NodeTransform *S = new NodeTransform(Scale, scalVec3D);
     SG->insertChildNodeHere(S);
@@ -102,7 +109,7 @@ void initGraph(){
     Vector3D moveDowm = {0, -1.5, 0};
     NodeTransform *MD = new NodeTransform(Translate, moveDowm);
     SG->insertChildNodeHere(MD);
-        
+    
     //go back to root
     SG->goToRoot();
     //go to the child node and all objects are following the child node child(0)
@@ -203,7 +210,7 @@ void lightC(int light,int dir,int unit){
                 else if(unit==0 && position0[2]>=-300){
                     position0[2]-=10;
                     glLightfv(GL_LIGHT0,GL_POSITION,position0);
-                }   
+                }
         }
         
     }
@@ -212,27 +219,31 @@ void lightC(int light,int dir,int unit){
 //callbacks
 void keyboard(unsigned char key, int x, int y)
 {
-	switch (key)
-	{
-		case 'q':
-		case 27:
-			exit (0);
-			break;
-        
-        //press key "1" to get a cube at position (0, 0, 0)
+    switch (key)
+    {
+        case 'q':
+        case 27:
+            exit (0);
+            break;
+            
+            //press key "1" to get a cube at position (0, 0, 0)
         case '1':
         {
+            SG->currentNode->flag_frame = 0;
             NodeModel *m = new NodeModel(Cube);
+            m->flag_frame = 1;
             m->parent = SG->rootNode->children->at(0);
             SG->rootNode->children->at(0)->children->push_back(m);
             SG->currentNode = m;
             break;
         }
-        
-        //press "2" to get a Sphere
+            
+            //press "2" to get a Sphere
         case '2':
         {
+            SG->currentNode->flag_frame = 0;
             NodeModel *m = new NodeModel(Sphere);
+            m->flag_frame = 2;
             m->parent = SG->rootNode->children->at(0);
             SG->rootNode->children->at(0)->children->push_back(m);
             SG->currentNode = m;
@@ -240,71 +251,69 @@ void keyboard(unsigned char key, int x, int y)
             break;
         }
             
-        //press "3" to get a Teapot
+            //press "3" to get a Teapot
         case '3':
         {
+            SG->currentNode->flag_frame = 0;
             NodeModel *m = new NodeModel(Teapot);
+            m->flag_frame = 3;
             m->parent = SG->rootNode->children->at(0);
             SG->rootNode->children->at(0)->children->push_back(m);
             SG->currentNode = m;
             break;
         }
-         
-        //press "4" to get a Cone
+            
+            //press "4" to get a Cone
         case '4':
         {
+            SG->currentNode->flag_frame = 0;
             NodeModel *m = new NodeModel(Cone);
+            m->flag_frame = 4;
             m->parent = SG->rootNode->children->at(0);
             SG->rootNode->children->at(0)->children->push_back(m);
             SG->currentNode = m;
             break;
         }
-           
-        //press "5" to get a Dodecahedron
+            
+            //press "5" to get a Torus
         case '5':
         {
-            NodeModel *m = new NodeModel(Dodecahedron);
+            SG->currentNode->flag_frame = 0;
+            NodeModel *m = new NodeModel(Torus);
+            m->flag_frame = 5;
             m->parent = SG->rootNode->children->at(0);
             SG->rootNode->children->at(0)->children->push_back(m);
             SG->currentNode = m;
             break;
         }
+            
            
-        //press "6" to get Icosahedron
-        case '6':
-        {
-            NodeModel *m = new NodeModel(Icosahedron);
-            m->parent = SG->rootNode->children->at(0);
-            SG->rootNode->children->at(0)->children->push_back(m);
-            SG->currentNode = m;
-            break;
-        }
-        
-        //pree '7' to get Gold surface
+            
+            //pree '7' to get Gold surface
         case '7':
         {
             NodeMaterial *m = new NodeMaterial(Gold);
             SG->insertChildNodeHere(m);
             break;
         }
-        
-        //press 8 to get CyanPlastic surface
+            
+            //press 8 to get CyanPlastic surface
         case '8':
         {
             NodeMaterial *m = new NodeMaterial(CyanPlastic);
             SG->insertChildNodeHere(m);
             break;
         }
-        
-        //press 9 to get YellowRubber surface
+            
+            //press 9 to get YellowRubber surface
         case '9':
         {
             NodeMaterial *m = new NodeMaterial(YellowRubber);
             SG->insertChildNodeHere(m);
             break;
         }
-        
-        //press 'm' to get surface with Jade
+            
+            //press 'm' to get surface with Jade
         case 'm':
         {
             NodeMaterial *m = new NodeMaterial(MaterialType::Jade);
@@ -312,7 +321,7 @@ void keyboard(unsigned char key, int x, int y)
             break;
         }
             
-        //press n to get a random surface. Try to press many times and you will get a surprice surface!
+            //press n to get a random surface. Try to press many times and you will get a surprice surface!
         case 'n':
         {
             NodeMaterial *m = new NodeMaterial(Random);
@@ -326,82 +335,196 @@ void keyboard(unsigned char key, int x, int y)
             
     }
     
-            //turn on / off the light
-            if (key=='o'||key=='O'){
-                switch(countL){
-                    case 0:
-                        glEnable(GL_LIGHTING);
-                        glEnable(GL_LIGHT0);
-                        glEnable(GL_LIGHT1);
-                        glEnable(GL_DEPTH_TEST);
-                        
-                        glLightfv(GL_LIGHT0, GL_POSITION, position0);
-                        glLightfv(GL_LIGHT0, GL_DIFFUSE, diff0);
-                        glLightfv(GL_LIGHT0, GL_AMBIENT, amb0);
-                        glLightfv(GL_LIGHT0, GL_SPECULAR, spec0);
-                        
-                        glLightfv(GL_LIGHT1, GL_POSITION, position1);
-                        glLightfv(GL_LIGHT1, GL_DIFFUSE, diff1);
-                        glLightfv(GL_LIGHT1, GL_AMBIENT, amb1);
-                        glLightfv(GL_LIGHT1, GL_SPECULAR, spec1);
-                        
-                        countL++;
-                        break;
-                        // printf("light%f \n", light);
-                    case 1:
-                        glDisable(GL_LIGHTING);
-                        glDisable(GL_LIGHT0);
-                        glDisable(GL_LIGHT1);
-                        countL=0;
-                        break;
-                }
-            }
-            //light controller switch light
-            if (key=='0'){
-                if(light==0){
-                    light++;
-                }else{light=0;}
-            }
-            //switch from x,y,z axis
-            //x-axis
-            //x + shift, x ++
-            //x + alt, x --
-            if (key=='x'||key=='X'){
-                int mod= glutGetModifiers();
-                if (mod== GLUT_ACTIVE_SHIFT){
-                    lightC(light,0,1);
-                }
-                if (mod== GLUT_ACTIVE_ALT){
-                    lightC(light,0,0);
-                }
-            }
-            //y-axis
-            //y + shift,y ++
-            //y + alt,y--
-            if (key=='y'||key=='Y'){
-                int mod= glutGetModifiers();
-                if (mod== GLUT_ACTIVE_SHIFT){
-                    lightC(light,1,1);
-                }
-                if (mod== GLUT_ACTIVE_ALT){
-                    lightC(light,1,0);
-                }
-            }
-            //z-axis
-            //z + shift, z++
-            //z + alt, z--
-            if (key=='z'||key=='Z'){
-                int mod= glutGetModifiers();
-                if (mod== GLUT_ACTIVE_SHIFT){
-                    lightC(light,2,1);
-                }
-                if (mod== GLUT_ACTIVE_ALT){
-                    lightC(light,2,0);
-                }
-            }
-            
-	
-	glutPostRedisplay();
+    //turn on / off the light
+    if (key=='o'||key=='O'){
+        switch(countL){
+            case 0:
+                glEnable(GL_LIGHTING);
+                glEnable(GL_LIGHT0);
+                glEnable(GL_LIGHT1);
+                glEnable(GL_DEPTH_TEST);
+                
+                glLightfv(GL_LIGHT0, GL_POSITION, position0);
+                glLightfv(GL_LIGHT0, GL_DIFFUSE, diff0);
+                glLightfv(GL_LIGHT0, GL_AMBIENT, amb0);
+                glLightfv(GL_LIGHT0, GL_SPECULAR, spec0);
+                
+                glLightfv(GL_LIGHT1, GL_POSITION, position1);
+                glLightfv(GL_LIGHT1, GL_DIFFUSE, diff1);
+                glLightfv(GL_LIGHT1, GL_AMBIENT, amb1);
+                glLightfv(GL_LIGHT1, GL_SPECULAR, spec1);
+                
+                countL++;
+                break;
+                // printf("light%f \n", light);
+            case 1:
+                glDisable(GL_LIGHTING);
+                glDisable(GL_LIGHT0);
+                glDisable(GL_LIGHT1);
+                countL=0;
+                break;
+        }
+    }
+    //light controller switch light
+    if (key=='0'){
+        if(light==0){
+            light++;
+        }else{light=0;}
+    }
+    //switch from x,y,z axis
+    //x-axis
+    //x + shift, x ++
+    //x + alt, x --
+    if (key=='x'||key=='X'){
+        int mod= glutGetModifiers();
+        if (mod== GLUT_ACTIVE_SHIFT){
+            lightC(light,0,1);
+        }
+        if (mod== GLUT_ACTIVE_ALT){
+            lightC(light,0,0);
+        }
+    }
+    //y-axis
+    //y + shift,y ++
+    //y + alt,y--
+    if (key=='y'||key=='Y'){
+        int mod= glutGetModifiers();
+        if (mod== GLUT_ACTIVE_SHIFT){
+            lightC(light,1,1);
+        }
+        if (mod== GLUT_ACTIVE_ALT){
+            lightC(light,1,0);
+        }
+    }
+    //z-axis
+    //z + shift, z++
+    //z + alt, z--
+    if (key=='z'||key=='Z'){
+        int mod= glutGetModifiers();
+        if (mod== GLUT_ACTIVE_SHIFT){
+            lightC(light,2,1);
+        }
+        if (mod== GLUT_ACTIVE_ALT){
+            lightC(light,2,0);
+        }
+    }
+    // scale
+    // x-axis
+    //x + shift,x++
+    // x+alt, x--
+    if (key=='c'||key=='C'){
+        int mod= glutGetModifiers();
+        if (mod==GLUT_ACTIVE_SHIFT){
+            Vector3D tempVec3D = {2,1,1};
+            NodeTransform *T = new NodeTransform(Scale, tempVec3D);
+            SG->insertChildNodeHere(T);
+        }
+        if (mod==GLUT_ACTIVE_ALT){
+            Vector3D tempVec3D = {0.5,1,1};
+            NodeTransform *T = new NodeTransform(Scale, tempVec3D);
+            SG->insertChildNodeHere(T);
+        }
+    }
+    
+    // scale
+    // y-axis
+    //y + shift,y++
+    // y+alt, x--
+    if (key=='v'||key=='V'){
+        int mod= glutGetModifiers();
+        if (mod==GLUT_ACTIVE_SHIFT){
+            Vector3D tempVec3D = {1,2,1};
+            NodeTransform *T = new NodeTransform(Scale, tempVec3D);
+            SG->insertChildNodeHere(T);
+        }
+        if (mod==GLUT_ACTIVE_ALT){
+            Vector3D tempVec3D = {1,0.5,1};
+            NodeTransform *T = new NodeTransform(Scale, tempVec3D);
+            SG->insertChildNodeHere(T);
+        }
+    }
+    // scale
+    // z-axis
+    //z + shift,z++
+    // z+alt, z--
+    if (key=='b'||key=='B'){
+        int mod= glutGetModifiers();
+        if (mod==GLUT_ACTIVE_SHIFT){
+            Vector3D tempVec3D = {1,1,2};
+            NodeTransform *T = new NodeTransform(Scale, tempVec3D);
+            SG->insertChildNodeHere(T);
+        }
+        if (mod==GLUT_ACTIVE_ALT){
+            Vector3D tempVec3D = {1,1,0.5};
+            NodeTransform *T = new NodeTransform(Scale, tempVec3D);
+            SG->insertChildNodeHere(T);
+        }
+    }
+    
+    // rotate
+    // x-axis
+    //j + shift, angleX++
+    // j+ alt, angleX--
+    if (key=='j'||key=='J'){
+        int mod= glutGetModifiers();
+        if (mod==GLUT_ACTIVE_SHIFT){
+            angleX+=15;
+            Vector4D rotVec4D= {1,0,0,angleX};
+            NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
+            //printf("angle%f\n",angleX );
+            SG->insertChildNodeHere(T);
+        }
+        if (mod==GLUT_ACTIVE_ALT){
+            angleX-=15;
+            Vector4D rotVec4D= {1,0,0,angleX};
+            NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
+            SG->insertChildNodeHere(T);
+        }
+    }
+    
+    // rotate
+    // y-axis
+    //k + shift, angleY++
+    // k+ alt, angleY--
+    if (key=='k'||key=='K'){
+        int mod= glutGetModifiers();
+        if (mod==GLUT_ACTIVE_SHIFT){
+            angleY+=15;
+            Vector4D rotVec4D= {0,1,0,angleY};
+            NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
+            //printf("angle%f\n",angleX );
+            SG->insertChildNodeHere(T);
+        }
+        if (mod==GLUT_ACTIVE_ALT){
+            angleY-=15;
+            Vector4D rotVec4D= {0,1,0,angleY};
+            NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
+            SG->insertChildNodeHere(T);
+        }
+    }
+    // rotate
+    // z-axis
+    //l + shift, angleZ++
+    // l+ alt, angleZ--
+    if (key=='l'||key=='L'){
+        int mod= glutGetModifiers();
+        if (mod==GLUT_ACTIVE_SHIFT){
+            angleZ+=15;
+            Vector4D rotVec4D= {0,0,1,angleZ};
+            NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
+            //printf("angle%f\n",angleX );
+            SG->insertChildNodeHere(T);
+        }
+        if (mod==GLUT_ACTIVE_ALT){
+            angleZ-=15;
+            Vector4D rotVec4D= {0,0,1,angleZ};
+            NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
+            SG->insertChildNodeHere(T);
+        }
+    }
+    
+    
+    glutPostRedisplay();
 }
 
 /* drawAxis() -- draws an axis at the origin of the coordinate system
@@ -519,34 +642,34 @@ bool Intersect(int x, int y){
 
 void special(int key, int x, int y)
 {
-	/* arrow key presses move the camera */
-	switch(key)
-	{
-		case GLUT_KEY_LEFT:
-			camPos[0]-=0.1;
-			break;
-
-		case GLUT_KEY_RIGHT:
-			camPos[0]+=0.1;
-			break;
-
-		case GLUT_KEY_UP:
-			camPos[2] -= 0.1;
-			break;
-
-		case GLUT_KEY_DOWN:
-			camPos[2] += 0.1;
-			break;
-		
-		case GLUT_KEY_HOME:
-			camPos[1] += 0.1;
-			break;
-
-		case GLUT_KEY_END:
-			camPos[1] -= 0.1;
-			break;
-        
-        //Object moves X axis+
+    /* arrow key presses move the camera */
+    switch(key)
+    {
+        case GLUT_KEY_LEFT:
+            camPos[0]-=0.1;
+            break;
+            
+        case GLUT_KEY_RIGHT:
+            camPos[0]+=0.1;
+            break;
+            
+        case GLUT_KEY_UP:
+            camPos[2] -= 0.1;
+            break;
+            
+        case GLUT_KEY_DOWN:
+            camPos[2] += 0.1;
+            break;
+            
+        case GLUT_KEY_HOME:
+            camPos[1] += 0.1;
+            break;
+            
+        case GLUT_KEY_END:
+            camPos[1] -= 0.1;
+            break;
+            
+            //Object moves X axis+
         case GLUT_KEY_F1:
         {
             Vector3D tempVec3D = {.1,0,0};
@@ -554,8 +677,8 @@ void special(int key, int x, int y)
             SG->insertChildNodeHere(T);
             break;
         }
-         
-        //Object moves X axis-
+            
+            //Object moves X axis-
         case GLUT_KEY_F2:
         {
             Vector3D tempVec3D = {-0.1,0,0};
@@ -563,8 +686,8 @@ void special(int key, int x, int y)
             SG->insertChildNodeHere(T);
             break;
         }
-        
-        //Object moves Y axis+
+            
+            //Object moves Y axis+
         case GLUT_KEY_F3:
         {
             Vector3D tempVec3D = {0,0.1,0};
@@ -572,8 +695,8 @@ void special(int key, int x, int y)
             SG->insertChildNodeHere(T);
             break;
         }
-        
-        //Object moves Y axis-
+            
+            //Object moves Y axis-
         case GLUT_KEY_F4:
         {
             Vector3D tempVec3D = {0,-0.1,0};
@@ -581,8 +704,8 @@ void special(int key, int x, int y)
             SG->insertChildNodeHere(T);
             break;
         }
-        
-        //Object moves Z axis+
+            
+            //Object moves Z axis+
         case GLUT_KEY_F5:
         {
             Vector3D tempVec3D = {0,0,0.1};
@@ -590,8 +713,8 @@ void special(int key, int x, int y)
             SG->insertChildNodeHere(T);
             break;
         }
-        
-        //Object moves Z axis-
+            
+            //Object moves Z axis-
         case GLUT_KEY_F6:
         {
             Vector3D tempVec3D = {0,0,-0.1};
@@ -599,29 +722,29 @@ void special(int key, int x, int y)
             SG->insertChildNodeHere(T);
             break;
         }
-        
-	}
-	glutPostRedisplay();
+            
+    }
+    glutPostRedisplay();
 }
 
 void init(void)
 {	GLuint id = 1;
-
-	glEnable(GLUT_DEPTH);
-
-	glClearColor(0, 0, 0, 0);
-	glColor3f(1, 1, 1);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45, 1, 1, 100);
-
-	//init our scenegraph
-	SG = new SceneGraph();
-
-	//add various nodes
-	//initializing our world
-	initGraph();
+    
+    glEnable(GLUT_DEPTH);
+    
+    glClearColor(0, 0, 0, 0);
+    glColor3f(1, 1, 1);
+    
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45, 1, 1, 100);
+    
+    //init our scenegraph
+    SG = new SceneGraph();
+    
+    //add various nodes
+    //initializing our world
+    initGraph();
     
     
 }
@@ -637,17 +760,17 @@ void mouse(int button, int state, int x, int y){
  */
 void display(void)
 {
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	gluLookAt(camPos[0], camPos[1], camPos[2], 0,0,0, 0,1,0);
-	glColor3f(1,1,1);
-
-	//draw the sceneGraph
-	SG->draw();
-
+    
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    
+    gluLookAt(camPos[0], camPos[1], camPos[2], 0,0,0, 0,1,0);
+    glColor3f(1,1,1);
+    
+    //draw the sceneGraph
+    SG->draw();
+    
     //draw axis or not
     if (flag_axis%2 == 1) {
         drawAxis();
@@ -655,31 +778,31 @@ void display(void)
     
     
     
-	glutSwapBuffers();
+    glutSwapBuffers();
 }
 
 /* main function - program entry point */
 int main(int argc, char** argv)
 {
-	glutInit(&argc, argv);		//starts up GLUT
-	
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	
-	
-	glutInitWindowSize(600, 600);
-	glutInitWindowPosition(50, 50);
-
-	glutCreateWindow("SimpleSceneGraph");	//creates the window
-
-	glutDisplayFunc(display);	//registers "display" as the display callback function
-	glutKeyboardFunc(keyboard);
-	glutSpecialFunc(special);
+    glutInit(&argc, argv);		//starts up GLUT
+    
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    
+    
+    glutInitWindowSize(600, 600);
+    glutInitWindowPosition(50, 50);
+    
+    glutCreateWindow("SimpleSceneGraph");	//creates the window
+    
+    glutDisplayFunc(display);	//registers "display" as the display callback function
+    glutKeyboardFunc(keyboard);
+    glutSpecialFunc(special);
     glutMouseFunc(mouse);
     
     glEnable(GL_DEPTH_TEST);
-
-	init();
-
-	glutMainLoop();				//starts the event loop
-	return(0);					//return may not be necessary on all compilers
+    
+    init();
+    
+    glutMainLoop();				//starts the event loop
+    return(0);					//return may not be necessary on all compilers
 }

@@ -3,6 +3,7 @@
 
 Node::Node(){	//constructor
 	ID = getID();
+    flag_frame;
 	nodeType = root; //base class will be only really our root node, so lets do that
 	isDrawable = false;
 	children = new vector<Node*>();

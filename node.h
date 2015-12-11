@@ -28,6 +28,7 @@ public:
 	NodeType nodeType;
 	bool isDrawable;
 	int ID;
+    int flag_frame;
 	vector<Node*> *children;
 	Node* parent;
 	int currentChild;

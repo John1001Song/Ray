@@ -18,7 +18,8 @@ enum ModelType{
 	Cube,
 	Teapot,
     Cone,
-    Dodecahedron,
+    Torus,
+    //Dodecahedron,
     Icosahedron,
 	Custom
 };
@@ -30,6 +31,8 @@ public:
 
     virtual void nodeSpecificCodeDown();
 	virtual void nodeSpecificCodeUp();
+    
+    
 };
 
 #endif
