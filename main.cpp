@@ -49,6 +49,25 @@ float amb1[4] = {1, 1, 1, 1};
 float diff1[4] = {1,1,1, 1};
 float spec1[4] = {1,1,1, 1};
 
+//bounded box value
+
+float RadToD=180/3.14;
+float ang=0;
+float help1=0;
+float help2=0;
+float help3=0;
+float help4=0;
+float help5=0;
+float help6=0;
+
+float xb0=0;
+float yb0=0;
+float zb0=0;
+
+float xb1=0;
+float yb1=0;
+float zb1=0;
+
 //node ids
 int masterID = 0;
 int getID(){
@@ -222,7 +241,7 @@ void keyboard(unsigned char key, int x, int y)
     switch (key)
     {
         case 'q':
-        case 27:
+        case 'Q':
             exit (0);
             break;
             
@@ -235,6 +254,15 @@ void keyboard(unsigned char key, int x, int y)
             m->parent = SG->rootNode->children->at(0);
             SG->rootNode->children->at(0)->children->push_back(m);
             SG->currentNode = m;
+            
+            xb0=-0.5;
+            yb0=-0.5;
+            zb0=0.5;
+            
+            xb1=0.5;
+            yb1=0.5;
+            zb1=-0.5;
+            
             break;
         }
             
@@ -248,6 +276,14 @@ void keyboard(unsigned char key, int x, int y)
             SG->rootNode->children->at(0)->children->push_back(m);
             SG->currentNode = m;
             
+            xb0=-0.5;
+            yb0=-0.5;
+            zb0=0.5;
+            
+            xb1=0.5;
+            yb1=0.5;
+            zb1=-0.5;
+            
             break;
         }
             
@@ -260,6 +296,15 @@ void keyboard(unsigned char key, int x, int y)
             m->parent = SG->rootNode->children->at(0);
             SG->rootNode->children->at(0)->children->push_back(m);
             SG->currentNode = m;
+            
+            xb0=-0.5;
+            yb0=-0.5;
+            zb0=0.5;
+            
+            xb1=0.5;
+            yb1=0.5;
+            zb1=-0.5;
+            
             break;
         }
             
@@ -272,6 +317,15 @@ void keyboard(unsigned char key, int x, int y)
             m->parent = SG->rootNode->children->at(0);
             SG->rootNode->children->at(0)->children->push_back(m);
             SG->currentNode = m;
+            
+            xb0=-0.5;
+            yb0=-0.5;
+            zb0=0.5;
+            
+            xb1=0.5;
+            yb1=0.5;
+            zb1=-0.5;
+            
             break;
         }
             
@@ -284,6 +338,15 @@ void keyboard(unsigned char key, int x, int y)
             m->parent = SG->rootNode->children->at(0);
             SG->rootNode->children->at(0)->children->push_back(m);
             SG->currentNode = m;
+            
+            xb0=-0.5;
+            yb0=-0.5;
+            zb0=0.5;
+            
+            xb1=0.5;
+            yb1=0.5;
+            zb1=-0.5;
+            
             break;
         }
             
@@ -418,11 +481,15 @@ void keyboard(unsigned char key, int x, int y)
             Vector3D tempVec3D = {2,1,1};
             NodeTransform *T = new NodeTransform(Scale, tempVec3D);
             SG->insertChildNodeHere(T);
+            xb1*=2;
+            xb0*=2;
         }
         if (mod==GLUT_ACTIVE_ALT){
             Vector3D tempVec3D = {0.5,1,1};
             NodeTransform *T = new NodeTransform(Scale, tempVec3D);
             SG->insertChildNodeHere(T);
+            xb1*=0.5;
+            xb0*=0.5;
         }
     }
     
@@ -436,11 +503,15 @@ void keyboard(unsigned char key, int x, int y)
             Vector3D tempVec3D = {1,2,1};
             NodeTransform *T = new NodeTransform(Scale, tempVec3D);
             SG->insertChildNodeHere(T);
+            yb1*=2;
+            yb0*=2;
         }
         if (mod==GLUT_ACTIVE_ALT){
             Vector3D tempVec3D = {1,0.5,1};
             NodeTransform *T = new NodeTransform(Scale, tempVec3D);
             SG->insertChildNodeHere(T);
+            yb1*=0.5;
+            yb0*=0.5;
         }
     }
     // scale
@@ -453,11 +524,15 @@ void keyboard(unsigned char key, int x, int y)
             Vector3D tempVec3D = {1,1,2};
             NodeTransform *T = new NodeTransform(Scale, tempVec3D);
             SG->insertChildNodeHere(T);
+            zb1*=2;
+            zb0*=2;
         }
         if (mod==GLUT_ACTIVE_ALT){
             Vector3D tempVec3D = {1,1,0.5};
             NodeTransform *T = new NodeTransform(Scale, tempVec3D);
             SG->insertChildNodeHere(T);
+            zb0*=0.5;
+            zb1*=0.5;
         }
     }
     
@@ -471,14 +546,39 @@ void keyboard(unsigned char key, int x, int y)
             angleX+=15;
             Vector4D rotVec4D= {1,0,0,angleX};
             NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
-            //printf("angle%f\n",angleX );
             SG->insertChildNodeHere(T);
+            
+            ang=angleX*RadToD;
+            
+            help1= yb0 *cos(ang)- zb0*sin(ang);
+            help2= yb1 *cos(ang)- zb1*sin(ang);
+            help3= yb0*sin(ang)+zb0*cos(ang);
+            help4= zb1*sin(ang)+zb1*cos(ang);
+            
+            yb0=help1;
+            yb1=help2;
+            zb0=help3;
+            zb1=help4;
+            
         }
         if (mod==GLUT_ACTIVE_ALT){
             angleX-=15;
             Vector4D rotVec4D= {1,0,0,angleX};
             NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
             SG->insertChildNodeHere(T);
+            
+            ang=angleX*RadToD;
+            
+            help1= yb0 *cos(ang)- zb0*sin(ang);
+            help2= yb1 *cos(ang)- zb1*sin(ang);
+            help3= yb0*sin(ang)+zb0*cos(ang);
+            help4= zb1*sin(ang)+zb1*cos(ang);
+            
+            yb0=help1;
+            yb1=help2;
+            zb0=help3;
+            zb1=help4;
+            
         }
     }
     
@@ -492,7 +592,6 @@ void keyboard(unsigned char key, int x, int y)
             angleY+=15;
             Vector4D rotVec4D= {0,1,0,angleY};
             NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
-            //printf("angle%f\n",angleX );
             SG->insertChildNodeHere(T);
         }
         if (mod==GLUT_ACTIVE_ALT){
@@ -512,7 +611,6 @@ void keyboard(unsigned char key, int x, int y)
             angleZ+=15;
             Vector4D rotVec4D= {0,0,1,angleZ};
             NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
-            //printf("angle%f\n",angleX );
             SG->insertChildNodeHere(T);
         }
         if (mod==GLUT_ACTIVE_ALT){
@@ -602,38 +700,66 @@ bool Intersect(int x, int y){
     //magnitude!
     double M = sqrt(Rdx*Rdx + Rdy*Rdy + Rdz* Rdz);
     
-    //unit vector!
-    Rdx /= M;
-    Rdy /= M;
-    Rdz /= M;
+    float t1x, t2x, t1y,t2y, t1z, t2z, tnear,tfar, temp;
     
-    //A = Rd dot Rd
-    A = Rdx*Rdx + Rdy*Rdy + Rdz*Rdz;
+    t1x =(xb0-R0x)/Rdx;
+    t2x =(xb1-R0x)/Rdx;
     
-    double Btempx, Btempy, Btempz;
-    Btempx = R0x;
-    Btempy =  R0y;
-    Btempz =  R0z;
-    
-    B = Btempx * Rdx + Btempy * Rdy + Btempz *Rdz;
-    B *= 2.0;
-    
-    C = R0x*R0x + R0y*R0y + R0z* R0z - 1;
-    
-    
-    double sq = B*B  - 4*A*C;
-    
-    double t0 = 0, t1 = 0;
-    
-    if(sq < 0)
-        printf("no Intersection!!!\n");
-    else{
-        t0 = ((-1) * B + sqrt(sq))/(2*A);
-        t1 = ((-1) * B - sqrt(sq))/(2*A);
-        
-        printf("Intersection at: t = %f, and t = %f\n", t0, t1);
+    if (t1x> t2x){
+        temp=t1x;
+        t1x=t2x;
+        t2x=temp;
+        tnear= t1x;
+        tfar= t2x;
     }
-    
+    if(tnear>tfar|| tfar<0){
+        printf("No intersection!");
+    }else{
+        t1y =(yb0-R0y)/Rdy;
+        t2y =(yb1-R0y)/Rdy;
+        
+        if (t1y> t2y){
+            temp=t1y;
+            t1y=t2y;
+            t2y=temp;
+        }
+        if (t1y>tnear){
+            tnear=t1y;
+        }
+        if (t2y<tfar){
+            tfar=t2y;
+        }
+        
+        if (tnear>tfar||tfar<0){
+            printf("No intersection!");
+        }else{
+            t1z =(zb0-R0z)/Rdz;
+            t2z =(zb1-R0z)/Rdz;
+            
+            if (t1z>t2z){
+                temp=t1z;
+                t1z=t2z;
+                t2z=temp;
+            }
+            
+            if (t1z>tnear){
+                tnear=t1z;
+            }
+            
+            if(t2z<tfar){
+                tfar=t2z;
+            }
+            
+            if (tnear>tfar||tfar<0){
+                printf("No intersection!");
+            }else{
+                printf("Intersection at: t = %f, and t = %f\n", tnear, tfar);
+                printf("near point: %f,%f,%f\n", startI[0], startI[1], startI[2]);
+                printf("far point: %f,%f,%f\n", endI[0], endI[1], endI[2]);
+            }
+        }
+        
+    }
     
     return false; //else returns false
 }
@@ -675,6 +801,8 @@ void special(int key, int x, int y)
             Vector3D tempVec3D = {.1,0,0};
             NodeTransform *T = new NodeTransform(Translate, tempVec3D);
             SG->insertChildNodeHere(T);
+            xb0+=0.1;
+            xb1+=0.1;
             break;
         }
             
@@ -684,6 +812,8 @@ void special(int key, int x, int y)
             Vector3D tempVec3D = {-0.1,0,0};
             NodeTransform *T = new NodeTransform(Translate, tempVec3D);
             SG->insertChildNodeHere(T);
+            xb0-=0.1;
+            xb1-=0.1;
             break;
         }
             
@@ -693,6 +823,8 @@ void special(int key, int x, int y)
             Vector3D tempVec3D = {0,0.1,0};
             NodeTransform *T = new NodeTransform(Translate, tempVec3D);
             SG->insertChildNodeHere(T);
+            yb0+=0.1;
+            yb1+=0.1;
             break;
         }
             
@@ -702,6 +834,8 @@ void special(int key, int x, int y)
             Vector3D tempVec3D = {0,-0.1,0};
             NodeTransform *T = new NodeTransform(Translate, tempVec3D);
             SG->insertChildNodeHere(T);
+            yb0-=0.1;
+            yb1-=0.1;
             break;
         }
             
@@ -711,6 +845,8 @@ void special(int key, int x, int y)
             Vector3D tempVec3D = {0,0,0.1};
             NodeTransform *T = new NodeTransform(Translate, tempVec3D);
             SG->insertChildNodeHere(T);
+            zb0+=0.1;
+            zb1+=0.1;
             break;
         }
             
@@ -720,6 +856,8 @@ void special(int key, int x, int y)
             Vector3D tempVec3D = {0,0,-0.1};
             NodeTransform *T = new NodeTransform(Translate, tempVec3D);
             SG->insertChildNodeHere(T);
+            zb0-=0.1;
+            zb1+=0.1;
             break;
         }
             
