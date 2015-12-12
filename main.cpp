@@ -377,7 +377,7 @@ void keyboard(unsigned char key, int x, int y)
         }
             
             //press 'm' to get surface with Jade
-        case 'm':
+        case '6':
         {
             NodeMaterial *m = new NodeMaterial(MaterialType::Jade);
             SG->insertChildNodeHere(m);
@@ -436,8 +436,8 @@ void keyboard(unsigned char key, int x, int y)
     }
     //switch from x,y,z axis
     //x-axis
-    //x + shift, x ++
-    //x + alt, x --
+    //x + shift, x++
+    //x + alt, x--
     if (key=='x'||key=='X'){
         int mod= glutGetModifiers();
         if (mod== GLUT_ACTIVE_SHIFT){
@@ -448,7 +448,7 @@ void keyboard(unsigned char key, int x, int y)
         }
     }
     //y-axis
-    //y + shift,y ++
+    //y + shift,y++
     //y + alt,y--
     if (key=='y'||key=='Y'){
         int mod= glutGetModifiers();
@@ -473,8 +473,8 @@ void keyboard(unsigned char key, int x, int y)
     }
     // scale
     // x-axis
-    //x + shift,x++
-    // x+alt, x--
+    // x + shift,x*2
+    // x + alt, x/2
     if (key=='c'||key=='C'){
         int mod= glutGetModifiers();
         if (mod==GLUT_ACTIVE_SHIFT){
@@ -495,8 +495,8 @@ void keyboard(unsigned char key, int x, int y)
     
     // scale
     // y-axis
-    //y + shift,y++
-    // y+alt, x--
+    // y + shift,y*=2
+    // y + alt, y/=2
     if (key=='v'||key=='V'){
         int mod= glutGetModifiers();
         if (mod==GLUT_ACTIVE_SHIFT){
@@ -516,8 +516,8 @@ void keyboard(unsigned char key, int x, int y)
     }
     // scale
     // z-axis
-    //z + shift,z++
-    // z+alt, z--
+    // z + shift,z*2
+    // z + alt, z/2
     if (key=='b'||key=='B'){
         int mod= glutGetModifiers();
         if (mod==GLUT_ACTIVE_SHIFT){
@@ -538,12 +538,12 @@ void keyboard(unsigned char key, int x, int y)
     
     // rotate
     // x-axis
-    //j + shift, angleX++
-    // j+ alt, angleX--
+    // j + shift, angleX++
+    // j + alt, angleX--
     if (key=='j'||key=='J'){
         int mod= glutGetModifiers();
         if (mod==GLUT_ACTIVE_SHIFT){
-            angleX+=15;
+            angleX+=1;
             Vector4D rotVec4D= {1,0,0,angleX};
             NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
             SG->insertChildNodeHere(T);
@@ -562,7 +562,7 @@ void keyboard(unsigned char key, int x, int y)
             
         }
         if (mod==GLUT_ACTIVE_ALT){
-            angleX-=15;
+            angleX-=1;
             Vector4D rotVec4D= {1,0,0,angleX};
             NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
             SG->insertChildNodeHere(T);
@@ -584,18 +584,18 @@ void keyboard(unsigned char key, int x, int y)
     
     // rotate
     // y-axis
-    //k + shift, angleY++
-    // k+ alt, angleY--
+    // k + shift, angleY++
+    // k + alt, angleY--
     if (key=='k'||key=='K'){
         int mod= glutGetModifiers();
         if (mod==GLUT_ACTIVE_SHIFT){
-            angleY+=15;
+            angleY+=1;
             Vector4D rotVec4D= {0,1,0,angleY};
             NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
             SG->insertChildNodeHere(T);
         }
         if (mod==GLUT_ACTIVE_ALT){
-            angleY-=15;
+            angleY-=1;
             Vector4D rotVec4D= {0,1,0,angleY};
             NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
             SG->insertChildNodeHere(T);
@@ -608,13 +608,13 @@ void keyboard(unsigned char key, int x, int y)
     if (key=='l'||key=='L'){
         int mod= glutGetModifiers();
         if (mod==GLUT_ACTIVE_SHIFT){
-            angleZ+=15;
+            angleZ+=1;
             Vector4D rotVec4D= {0,0,1,angleZ};
             NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
             SG->insertChildNodeHere(T);
         }
         if (mod==GLUT_ACTIVE_ALT){
-            angleZ-=15;
+            angleZ-=1;
             Vector4D rotVec4D= {0,0,1,angleZ};
             NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
             SG->insertChildNodeHere(T);
