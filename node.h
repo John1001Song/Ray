@@ -34,6 +34,8 @@ public:
 	int currentChild;
     Vector3D nodePos3D;
     Vector4D nodePos4D;
+    Vector3D nodeNear;
+    Vector3D nodeFar;
     
 	void draw();
 	virtual void nodeSpecificCodeDown();

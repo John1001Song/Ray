@@ -11,6 +11,8 @@ Node::Node(){	//constructor
 	currentChild = 0;
     nodePos3D.x = 0; nodePos3D.y = 0; nodePos3D.z = 0;
     nodePos4D.x = 0; nodePos4D.y = 0; nodePos4D.z = 0; nodePos4D.w = 1;
+    nodeNear = {0.5, 0.5, 0.5};
+    nodeFar = {-0.5, -0.5, -0.5};
 	printf("node init done\n");
 }
 

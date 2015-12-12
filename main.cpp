@@ -481,15 +481,15 @@ void keyboard(unsigned char key, int x, int y)
             Vector3D tempVec3D = {2,1,1};
             NodeTransform *T = new NodeTransform(Scale, tempVec3D);
             SG->insertChildNodeHere(T);
-            xb1*=2;
-            xb0*=2;
+            SG->currentNode->nodeFar.x*=2;
+            SG->currentNode->nodeNear.x*=2;
         }
         if (mod==GLUT_ACTIVE_ALT){
             Vector3D tempVec3D = {0.5,1,1};
             NodeTransform *T = new NodeTransform(Scale, tempVec3D);
             SG->insertChildNodeHere(T);
-            xb1*=0.5;
-            xb0*=0.5;
+            SG->currentNode->nodeNear.x*=0.5;
+            SG->currentNode->nodeFar.x*=0.5;
         }
     }
     
@@ -503,15 +503,15 @@ void keyboard(unsigned char key, int x, int y)
             Vector3D tempVec3D = {1,2,1};
             NodeTransform *T = new NodeTransform(Scale, tempVec3D);
             SG->insertChildNodeHere(T);
-            yb1*=2;
-            yb0*=2;
+            SG->currentNode->nodeFar.y*=2;
+            SG->currentNode->nodeNear.y*=2;
         }
         if (mod==GLUT_ACTIVE_ALT){
             Vector3D tempVec3D = {1,0.5,1};
             NodeTransform *T = new NodeTransform(Scale, tempVec3D);
             SG->insertChildNodeHere(T);
-            yb1*=0.5;
-            yb0*=0.5;
+            SG->currentNode->nodeNear.y*=0.5;
+            SG->currentNode->nodeFar.y*=0.5;
         }
     }
     // scale
@@ -524,15 +524,15 @@ void keyboard(unsigned char key, int x, int y)
             Vector3D tempVec3D = {1,1,2};
             NodeTransform *T = new NodeTransform(Scale, tempVec3D);
             SG->insertChildNodeHere(T);
-            zb1*=2;
-            zb0*=2;
+            SG->currentNode->nodeNear.z*=2;
+            SG->currentNode->nodeFar.z*=2;
         }
         if (mod==GLUT_ACTIVE_ALT){
             Vector3D tempVec3D = {1,1,0.5};
             NodeTransform *T = new NodeTransform(Scale, tempVec3D);
             SG->insertChildNodeHere(T);
-            zb0*=0.5;
-            zb1*=0.5;
+            SG->currentNode->nodeFar.z*=0.5;
+            SG->currentNode->nodeNear.z*=0.5;
         }
     }
     
@@ -550,15 +550,22 @@ void keyboard(unsigned char key, int x, int y)
             
             ang=angleX*RadToD;
             
-            help1= yb0 *cos(ang)- zb0*sin(ang);
-            help2= yb1 *cos(ang)- zb1*sin(ang);
-            help3= yb0*sin(ang)+zb0*cos(ang);
-            help4= zb1*sin(ang)+zb1*cos(ang);
+            float yn, zn;//temp variable to store the y near and z near
+            yn = SG->currentNode->nodeNear.y;
+            zn = SG->currentNode->nodeNear.z;
             
-            yb0=help1;
-            yb1=help2;
-            zb0=help3;
-            zb1=help4;
+            float yf, zf;//temp variable to store the y far and z far
+            yf = SG->currentNode->nodeFar.y;
+            zf = SG->currentNode->nodeFar.z;
+            
+            //node near; rotate about x-axis, so x of node near vertex does not change
+            yn = yn * cos(ang) - zn * sin(ang);
+            zn = yn * sin(ang) + zn * cos(ang);
+            
+            //node far; rotate about x-axis.
+            yf = yf * cos(ang) - zf * sin(ang);
+            zf = yf * sin(ang) + zf * cos(ang);
+
             
         }
         if (mod==GLUT_ACTIVE_ALT){
@@ -569,16 +576,27 @@ void keyboard(unsigned char key, int x, int y)
             
             ang=angleX*RadToD;
             
-            help1= yb0 *cos(ang)- zb0*sin(ang);
-            help2= yb1 *cos(ang)- zb1*sin(ang);
-            help3= yb0*sin(ang)+zb0*cos(ang);
-            help4= zb1*sin(ang)+zb1*cos(ang);
+            float yn, zn;//temp variable to store the y near and z near
+            yn = SG->currentNode->nodeNear.y;
+            zn = SG->currentNode->nodeNear.z;
             
-            yb0=help1;
-            yb1=help2;
-            zb0=help3;
-            zb1=help4;
+            float yf, zf;//temp variable to store the y far and z far
+            yf = SG->currentNode->nodeFar.y;
+            zf = SG->currentNode->nodeFar.z;
             
+            //node near; rotate about x-axis, so x of node near vertex does not change
+            yn = yn * cos(ang) - zn * sin(ang);
+            zn = yn * sin(ang) + zn * cos(ang);
+            
+            //node far; rotate about x-axis.
+            yf = yf * cos(ang) - zf * sin(ang);
+            zf = yf * sin(ang) + zf * cos(ang);
+            
+            //node far and near get the after-rotate value
+            SG->currentNode->nodeFar.y = yf;
+            SG->currentNode->nodeFar.z = zf;
+            SG->currentNode->nodeNear.y = yn;
+            SG->currentNode->nodeNear.z = zn;
         }
     }
     
@@ -593,12 +611,62 @@ void keyboard(unsigned char key, int x, int y)
             Vector4D rotVec4D= {0,1,0,angleY};
             NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
             SG->insertChildNodeHere(T);
+            
+            ang=angleY*RadToD;
+            
+            float xn, zn;//temp variable to store the x near and z near
+            xn = SG->currentNode->nodeNear.x;
+            zn = SG->currentNode->nodeNear.z;
+            
+            float xf, zf;//temp variable to store the x far and z far
+            xf = SG->currentNode->nodeFar.x;
+            zf = SG->currentNode->nodeFar.z;
+            
+            //node near; rotate about y-axis, so y of node near vertex does not change
+            xn = xn * cos(ang) + zn * sin(ang);
+            zn = xn * sin(ang) * (-1) + zn * cos(ang);
+            
+            //node far; rotate about x-axis.
+            xf = xf * cos(ang) + zf * sin(ang);
+            zf = xf * sin(ang) * (-1) + zf * cos(ang);
+            
+            //node far and near get the after-rotate value
+            SG->currentNode->nodeFar.x = xf;
+            SG->currentNode->nodeFar.z = zf;
+            SG->currentNode->nodeNear.x = xn;
+            SG->currentNode->nodeNear.z = zn;
+            
         }
         if (mod==GLUT_ACTIVE_ALT){
             angleY-=1;
             Vector4D rotVec4D= {0,1,0,angleY};
             NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
             SG->insertChildNodeHere(T);
+            
+            ang=angleY*RadToD;
+            
+            float xn, zn;//temp variable to store the x near and z near
+            xn = SG->currentNode->nodeNear.x;
+            zn = SG->currentNode->nodeNear.z;
+            
+            float xf, zf;//temp variable to store the x far and z far
+            xf = SG->currentNode->nodeFar.x;
+            zf = SG->currentNode->nodeFar.z;
+            
+            //node near; rotate about y-axis, so y of node near vertex does not change
+            xn = xn * cos(ang) + zn * sin(ang);
+            zn = xn * sin(ang) * (-1) + zn * cos(ang);
+            
+            //node far; rotate about x-axis.
+            xf = xf * cos(ang) + zf * sin(ang);
+            zf = xf * sin(ang) * (-1) + zf * cos(ang);
+            
+            //node far and near get the after-rotate value
+            SG->currentNode->nodeFar.x = xf;
+            SG->currentNode->nodeFar.z = zf;
+            SG->currentNode->nodeNear.x = xn;
+            SG->currentNode->nodeNear.z = zn;
+            
         }
     }
     // rotate
@@ -612,12 +680,62 @@ void keyboard(unsigned char key, int x, int y)
             Vector4D rotVec4D= {0,0,1,angleZ};
             NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
             SG->insertChildNodeHere(T);
+            
+            ang=angleZ*RadToD;
+            
+            float xn, yn;//temp variable to store the x near and y near
+            xn = SG->currentNode->nodeNear.x;
+            yn = SG->currentNode->nodeNear.y;
+            
+            float xf, yf;//temp variable to store the x far and y far
+            xf = SG->currentNode->nodeFar.x;
+            yf = SG->currentNode->nodeFar.y;
+            
+            //node near; rotate about z-axis, so z of node near vertex does not change
+            xn = xn * cos(ang) - yn * sin(ang);
+            yn = xn * sin(ang) + yn * cos(ang);
+            
+            //node far; rotate about z-axis.
+            xf = xf * cos(ang) - yf * sin(ang);
+            yf = xf * sin(ang) + yf * cos(ang);
+            
+            //node far and near get the after-rotate value
+            SG->currentNode->nodeFar.x = xf;
+            SG->currentNode->nodeFar.y = yf;
+            SG->currentNode->nodeNear.x = xn;
+            SG->currentNode->nodeNear.y = yn;
+            
         }
         if (mod==GLUT_ACTIVE_ALT){
             angleZ-=1;
             Vector4D rotVec4D= {0,0,1,angleZ};
             NodeTransform *T = new NodeTransform(Rotate, rotVec4D);
             SG->insertChildNodeHere(T);
+            
+            ang=angleZ*RadToD;
+            
+            float xn, yn;//temp variable to store the x near and y near
+            xn = SG->currentNode->nodeNear.x;
+            yn = SG->currentNode->nodeNear.y;
+            
+            float xf, yf;//temp variable to store the x far and y far
+            xf = SG->currentNode->nodeFar.x;
+            yf = SG->currentNode->nodeFar.y;
+            
+            //node near; rotate about z-axis, so z of node near vertex does not change
+            xn = xn * cos(ang) - yn * sin(ang);
+            yn = xn * sin(ang) + yn * cos(ang);
+            
+            //node far; rotate about z-axis.
+            xf = xf * cos(ang) - yf * sin(ang);
+            yf = xf * sin(ang) + yf * cos(ang);
+            
+            //node far and near get the after-rotate value
+            SG->currentNode->nodeFar.x = xf;
+            SG->currentNode->nodeFar.y = yf;
+            SG->currentNode->nodeNear.x = xn;
+            SG->currentNode->nodeNear.y = yn;
+            
         }
     }
     
