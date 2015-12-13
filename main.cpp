@@ -24,8 +24,8 @@ float camPos[] = {2.5, 2.5, 5};
 float angle = 0.0f;
 
 //array used for intersect test
-double startI[] ={0,0,0};
-double endI[]={1,1,1};
+double start[] ={0,0,0};
+double endy[]={1,1,1};
 
 //angle rotate
 float angleX=0;
@@ -726,15 +726,15 @@ void drawAxis()
 //borrow the following code Intersect from Thomas
 
 //function which preforms intersection test
-bool Intersect(int x, int y){
-    printf("%i, %i\n", x, y);
-    
-    //allocate matricies memory
+
+
+//this function will use intersect to check all object in the scene. If hit, get a "true". Collect the hitted object and return the nearest one.
+//Then the currentNode pointer points to this object.
+
+bool intersect(Vector3D nodeNear, Vector3D nodeFar, int mouseX, int mouseY){
+    //allocate matrices memory
     double matModelView[16], matProjection[16];
     int viewport[4];
-    
-    //vectors
-    
     
     //grab the matricies
     glGetDoublev(GL_MODELVIEW_MATRIX, matModelView);
@@ -742,111 +742,126 @@ bool Intersect(int x, int y){
     glGetIntegerv(GL_VIEWPORT, viewport);
     
     //unproject the values
-    double winX = (double)x;
-    double winY = viewport[3] - (double)y;
+    double winX = (double)mouseX;
+    double winY = viewport[3] - (double)mouseY;
     
     // get point on the 'near' plane (third param is set to 0.0)
     gluUnProject(winX, winY, 0.0, matModelView, matProjection,
-                 viewport, &startI[0], &startI[1], &startI[2]);
+                 viewport, &start[0], &start[1], &start[2]);
     
     // get point on the 'far' plane (third param is set to 1.0)
-    gluUnProject(winX, winY, 1.0, matModelView, matProjection,
-                 viewport, &endI[0], &endI[1], &endI[2]);
+    gluUnProject(winX, winY, 1.0, matModelView, matProjection, viewport, &endy[0], &endy[1], &endy[2]);
+    
+    printf("near point: %f,%f,%f\n", start[0], start[1], start[2]);
+    printf("far point: %f,%f,%f\n", endy[0], endy[1], endy[2]);
+    
+    double R0x, R0y, R0z;//Ray origin
+    double Rdx, Rdy, Rdz;//Ray direction unit vector
+    
+    R0x = start[0];
+    R0y = start[1];
+    R0z = start[2];
+    
+    Rdx = endy[0] - start[0];
+    Rdy = endy[1] - start[1];
+    Rdz = endy[2] - start[2];
+    
+    //magnitude
+    double M = sqrt(Rdx*Rdx + Rdy*Rdy + Rdz*Rdz);
+    
+    //get correct unit vector now
+    Rdx /= M;
+    Rdy /= M;
+    Rdz /= M;
+    
+    //inverse of the unit vector
+    double invRdx = 1/Rdx;
+    double invRdy = 1/Rdy;
+    double invRdz = 1/Rdz;
+    
+    int sign[3];
+    sign[0] = (invRdx < 0);
+    sign[1] = (invRdy < 0);
+    sign[2] = (invRdz < 0);
+    
+    float tmin, tmax, tymin, tymax, tzmin, tzmax;
+    Vector3D *bounds[2];
+    bounds[0] = &nodeNear;
+    bounds[1] = &nodeFar;
+    
+    tmin = (bounds[sign[0]]->x - R0x) * invRdx;
+    tmax = (bounds[1-sign[0]]->x - R0x) * invRdx;
+    tymin = (bounds[sign[1]]->y - R0y) * invRdy;
+    tymax = (bounds[1-sign[1]]->y - R0y) * invRdy;
+    
+    if ((tmin > tymax) || (tymin > tmax))
+        return false;
     
     
-    printf("near point: %f,%f,%f\n", startI[0], startI[1], startI[2]);
-    printf("far point: %f,%f,%f\n", endI[0], endI[1], endI[2]);
-    
-    //check for intersection against sphere!
-    //hurray!
-    
-    double A, B, C;
-    
-    double R0x, R0y, R0z;
-    double Rdx, Rdy, Rdz;
-    
-    R0x = startI[0];
-    R0y = startI[1];
-    R0z = startI[2];
-    
-    Rdx = endI[0] - startI[0];
-    Rdy = endI[1] - startI[1];
-    Rdz = endI[2] - startI[2];
-    
-    //magnitude!
-    double M = sqrt(Rdx*Rdx + Rdy*Rdy + Rdz* Rdz);
-    
-    float t1x, t2x, t1y,t2y, t1z, t2z, tnear,tfar, temp;
+    if (tymin > tmax)
+        tmin = tymin;
     
     
+    if (tymax < tmax)
+        tmax = tymax;
     
-    if (t1x> t2x){
-        temp=t1x;
-        t1x=t2x;
-        t2x=temp;
-        tnear= t1x;
-        tfar= t2x;
-    }
-    if(tnear>tfar|| tfar<0){
-        printf("No intersection!");
-    }else{
-        
-        
-        if (t1y> t2y){
-            temp=t1y;
-            t1y=t2y;
-            t2y=temp;
-        }
-        if (t1y>tnear){
-            tnear=t1y;
-        }
-        if (t2y<tfar){
-            tfar=t2y;
-        }
-        
-        if (tnear>tfar||tfar<0){
-            printf("No intersection!");
-        }else{
-            
-            
-            if (t1z>t2z){
-                temp=t1z;
-                t1z=t2z;
-                t2z=temp;
-            }
-            
-            if (t1z>tnear){
-                tnear=t1z;
-            }
-            
-            if(t2z<tfar){
-                tfar=t2z;
-            }
-            
-            if (tnear>tfar||tfar<0){
-                printf("No intersection!");
-            }else{
-                printf("Intersection at: t = %f, and t = %f\n", tnear, tfar);
-                printf("near point: %f,%f,%f\n", startI[0], startI[1], startI[2]);
-                printf("far point: %f,%f,%f\n", endI[0], endI[1], endI[2]);
-            }
-        }
-        
-    }
     
-    return false; //else returns false
-}
-
-//this function will use intersect to check all object in the scene. If hit, get a "true". Collect the hitted object and return the nearest one.
-//Then the currentNode pointer points to this object.
-
-bool intersect(Vector3D nodeNear, Vector3D nodeFar, int mouseX, int mouseY){
+    tzmin = (bounds[sign[2]]->z-R0z) * invRdz;
+    tzmax = (bounds[1-sign[2]]->z - R0z) * invRdz;
     
-    return false;
+    if ((tmin > tzmax) || (tzmin > tmax))
+        return false;
+    
+    
+    if (tzmin > tmin)
+        tmin = tzmin;
+    
+    
+    if (tzmax < tmax)
+        tmax = tzmax;
+    return true;
+    
+    
 }
 
 float getDis(Vector3D nodeNear, int mouseX, int mouseY){
     float distance = 0;
+    
+    //allocate matricies memory
+    double matModelView[16], matProjection[16];
+    int viewport[4];
+    
+    //grab the matrices
+    glGetDoublev(GL_MODELVIEW_MATRIX, matModelView);
+    glGetDoublev(GL_PROJECTION_MATRIX, matProjection);
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    
+    //unproject the values;
+    double winX = (double)mouseX;
+    double winY = viewport[3] - (double)mouseY;
+    
+    //get point on the 'near' plane (third param is set to 0.0)
+    gluUnProject(winX, winY, 0.0, matModelView, matProjection, viewport, &start[0], &start[1], &start[2]);
+    
+    //calculate the distance between the nodeNear and start
+    double xn, yn, zn;
+    double x0, y0, z0;
+    double xd, yd, zd;
+    
+    x0 = start[0];
+    y0 = start[1];
+    z0 = start[2];
+    
+    xn = nodeNear.x;
+    yn = nodeNear.y;
+    zn = nodeNear.z;
+    
+    xd = xn - x0;
+    yd = yn - y0;
+    zd = zn - z0;
+    
+    distance = sqrtf(xd*xd + yd*yd + zd*zd);
+    
     return distance;
 }
 
@@ -854,6 +869,7 @@ void raySelect(int mouseX, int mouseY){
     int objNumb; // indicate how many objects in the scene
     //SG has two children (one child is a translation at child(0) and the other is nodeModel at child(1)). All objects are linked to NodeTransform
     objNumb = SG->rootNode->children->at(0)->children->size();
+    printf("objNumb is %d\n", objNumb);
     
     bool hitRes[objNumb]; //array to store the hit result of each object
     
@@ -869,15 +885,29 @@ void raySelect(int mouseX, int mouseY){
         currentNear = SG->currentNode->nodeNear;
         //copy object's far vertex to the temp "far" vertex
         currentFar = SG->currentNode->nodeFar;
-        //use intersect fuc to check if there is a hit
+        
+        //compare near and far vertex first, because after transform, near would be far and far be near
+        float dNear = getDis(currentNear, mouseX, mouseY);
+        float dFar = getDis(currentFar, mouseX, mouseY);
+        
+        if (dNear > dFar) {
+            currentFar = SG->currentNode->nodeNear;
+            currentNear = SG->currentNode->nodeFar;
+        }
+        
+        //use intersect func to check if there is a hit
         currentHitRes = intersect(currentNear, currentFar, mouseX, mouseY);
+        
         //use currentDis to store the distance with the near and ray origin
         float currentDis;
         if (currentHitRes == true) {
+            printf("have Intersection!!!\n");
             currentDis = getDis(currentNear, mouseX, mouseY);
+        }else{
+            printf("no Intersection!!!\n");
         }
         
-        if (currentDis < nearestDis) {
+        if ((currentDis < nearestDis) && (currentHitRes == true)) {
             nearestDis = currentDis;
             nearObj = i;
         }
@@ -931,6 +961,9 @@ void special(int key, int x, int y)
             SG->insertChildNodeHere(T);
             SG->currentNode->nodeNear.x+=0.1;
             SG->currentNode->nodeFar.x+=0.1;
+            
+            printf("nodeFar x is %f\n", SG->currentNode->nodeFar.x);
+            
             break;
         }
             
@@ -942,6 +975,9 @@ void special(int key, int x, int y)
             SG->insertChildNodeHere(T);
             SG->currentNode->nodeNear.x-=0.1;
             SG->currentNode->nodeFar.x-=0.1;
+            
+            printf("nodeFar x is %f\n", SG->currentNode->nodeFar.x);
+            
             break;
         }
             
@@ -953,6 +989,9 @@ void special(int key, int x, int y)
             SG->insertChildNodeHere(T);
             SG->currentNode->nodeNear.y+=0.1;
             SG->currentNode->nodeNear.y+=0.1;
+            
+            printf("nodeFar y is %f\n", SG->currentNode->nodeFar.y);
+            
             break;
         }
             
@@ -964,6 +1003,9 @@ void special(int key, int x, int y)
             SG->insertChildNodeHere(T);
             SG->currentNode->nodeNear.y-=0.1;
             SG->currentNode->nodeNear.y-=0.1;
+            
+            printf("nodeFar y is %f\n", SG->currentNode->nodeFar.y);
+            
             break;
         }
             
@@ -975,6 +1017,9 @@ void special(int key, int x, int y)
             SG->insertChildNodeHere(T);
             SG->currentNode->nodeNear.z+=0.1;
             SG->currentNode->nodeNear.z+=0.1;
+            
+            printf("nodeFar z is %f\n", SG->currentNode->nodeFar.z);
+            
             break;
         }
             
@@ -986,6 +1031,9 @@ void special(int key, int x, int y)
             SG->insertChildNodeHere(T);
             SG->currentNode->nodeNear.z-=0.1;
             SG->currentNode->nodeNear.z-=0.1;
+            
+            printf("nodeFar z is %f\n", SG->currentNode->nodeFar.z);
+            
             break;
         }
             
@@ -1017,7 +1065,7 @@ void init(void)
 
 void mouse(int button, int state, int x, int y){
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-        Intersect(x, y);
+        raySelect(x, y);
     }
 }
 
