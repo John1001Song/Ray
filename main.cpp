@@ -773,54 +773,51 @@ bool intersect(Vector3D nodeNear, Vector3D nodeFar, int mouseX, int mouseY){
     Rdx /= M;
     Rdy /= M;
     Rdz /= M;
-    
-    //inverse of the unit vector
-    double invRdx = 1/Rdx;
-    double invRdy = 1/Rdy;
-    double invRdz = 1/Rdz;
-    
-    int sign[3];
-    sign[0] = (invRdx < 0);
-    sign[1] = (invRdy < 0);
-    sign[2] = (invRdz < 0);
-    
+ 
     float tmin, tmax, tymin, tymax, tzmin, tzmax;
-    Vector3D *bounds[2];
-    bounds[0] = &nodeNear;
-    bounds[1] = &nodeFar;
     
-    tmin = (bounds[sign[0]]->x - R0x) * invRdx;
-    tmax = (bounds[1-sign[0]]->x - R0x) * invRdx;
-    tymin = (bounds[sign[1]]->y - R0y) * invRdy;
-    tymax = (bounds[1-sign[1]]->y - R0y) * invRdy;
+    if (Rdx >= 0) {
+        tmin = (nodeNear.x - R0x) / Rdx;
+        tmax = (nodeFar.x - R0x) / Rdx;
+    }else{
+        tmin = (nodeFar.x - R0x) / Rdx;
+        tmax = (nodeNear.x - R0x) / Rdx;
+    }
+    
+    if (Rdy >= 0) {
+        tymin = (nodeNear.y - R0y) / Rdy;
+        tymax = (nodeFar.y - R0y) / Rdy;
+    }else{
+        tymin = (nodeFar.y - R0y) / Rdy;
+        tymax = (nodeNear.y - R0y) / Rdy;
+    }
     
     if ((tmin > tymax) || (tymin > tmax))
         return false;
     
-    
-    if (tymin > tmax)
+    if (tymin > tmin)
         tmin = tymin;
     
-    
-    if (tymax < tmax)
+    if (tymax < tmax) {
         tmax = tymax;
+    }
     
-    
-    tzmin = (bounds[sign[2]]->z-R0z) * invRdz;
-    tzmax = (bounds[1-sign[2]]->z - R0z) * invRdz;
+    if (Rdz >= 0) {
+        tzmin = (nodeNear.z - R0z) / Rdz;
+        tzmax = (nodeFar.z - R0z) / Rdz;
+    }else{
+        tzmin = (nodeFar.z - R0z) / Rdz;
+        tzmax = (nodeNear.z - R0z) / Rdz;
+    }
     
     if ((tmin > tzmax) || (tzmin > tmax))
         return false;
-    
-    
-    if (tzmin > tmin)
+    if (tzmin > tmin) {
         tmin = tzmin;
-    
-    
+    }
     if (tzmax < tmax)
         tmax = tzmax;
     return true;
-    
     
 }
 
