@@ -874,7 +874,7 @@ void raySelect(int mouseX, int mouseY){
     bool hitRes[objNumb]; //array to store the hit result of each object
     
     Vector3D currentNear, currentFar; //temp vertex to store the current node near and far vertex;
-    bool currentHitRes; // temp bool to store the hit result
+    bool currentHitRes = false; // temp bool to store the hit result
     
     float nearestDis = 0.0;//use this temp variable to store the shortest distance with the ray origin
     int nearObj = 0;// use this temp variable to store the children index and it is about the nearest object within the hitted ones
@@ -887,6 +887,9 @@ void raySelect(int mouseX, int mouseY){
         currentNear = SG->currentNode->nodeNear;
         //copy object's far vertex to the temp "far" vertex
         currentFar = SG->currentNode->nodeFar;
+        
+        printf("currentNear x, y, z is %f,%f,%f\n", currentNear.x, currentNear.y, currentNear.z);
+        printf("currentFar x, y, z is %f,%f,%f\n", currentFar.x, currentFar.y, currentFar.z);
         
         //compare near and far vertex first, because after transform, near would be far and far be near
         float dNear = getDis(currentNear, mouseX, mouseY);
@@ -915,6 +918,8 @@ void raySelect(int mouseX, int mouseY){
         if ((currentDis < nearestDis) && (currentHitRes == true)) {
             nearestDis = currentDis;
             nearObj = i;
+            printf("current nearest distance is %f\n", nearestDis);
+            printf("current nearest object is %d\n", nearObj);
         }
         //store the hit result to the array
         hitRes[i] = currentHitRes;
