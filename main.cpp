@@ -837,7 +837,62 @@ bool Intersect(int x, int y){
     return false; //else returns false
 }
 
+//this function will use intersect to check all object in the scene. If hit, get a "true". Collect the hitted object and return the nearest one.
+//Then the currentNode pointer points to this object.
 
+bool intersect(Vector3D nodeNear, Vector3D nodeFar, int mouseX, int mouseY){
+    
+    return false;
+}
+
+float getDis(Vector3D nodeNear, int mouseX, int mouseY){
+    float distance = 0;
+    return distance;
+}
+
+void raySelect(int mouseX, int mouseY){
+    int objNumb; // indicate how many objects in the scene
+    //SG has two children (one child is a translation at child(0) and the other is nodeModel at child(1)). All objects are linked to NodeTransform
+    objNumb = SG->rootNode->children->at(0)->children->size();
+    
+    bool hitRes[objNumb]; //array to store the hit result of each object
+    
+    Vector3D currentNear, currentFar; //temp vertex to store the current node near and far vertex;
+    bool currentHitRes; // temp bool to store the hit result
+    
+    float nearestDis = 0.0;//use this temp variable to store the shortest distance with the ray origin
+    int nearObj = 0;// use this temp variable to store the children index and it is about the nearest object within the hitted ones
+    
+    //use for loop to check if the ray hits each object or not
+    for (int i = 0; i < objNumb; i++) {
+        //pointer "currentNode" points to the current object; copy current object near vertex to the temp "near" vertex
+        currentNear = SG->currentNode->nodeNear;
+        //copy object's far vertex to the temp "far" vertex
+        currentFar = SG->currentNode->nodeFar;
+        //use intersect fuc to check if there is a hit
+        currentHitRes = intersect(currentNear, currentFar, mouseX, mouseY);
+        //use currentDis to store the distance with the near and ray origin
+        float currentDis;
+        if (currentHitRes == true) {
+            currentDis = getDis(currentNear, mouseX, mouseY);
+        }
+        
+        if (currentDis < nearestDis) {
+            nearestDis = currentDis;
+            nearObj = i;
+        }
+        //store the hit result to the array
+        hitRes[i] = currentHitRes;
+    }
+    
+    //after the for loop, we could get the shortest distance between the nearest object and the ray origin. And get the index of the child "nearObj"
+    //then move the pointer "currentNode" points to this child[nearObj]
+    SG->goToRoot();
+    SG->goToChild(0);//go to the Transform node
+    SG->goToChild(nearObj);// go to the nearest object where it is located at the childfren vector and the "currentNode" is pointing to it
+    
+    
+}
 
 void special(int key, int x, int y)
 {
