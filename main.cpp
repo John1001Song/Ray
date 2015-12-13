@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
+#include <limits>
 #include "structs.h"
 
 
@@ -773,51 +773,113 @@ bool intersect(Vector3D nodeNear, Vector3D nodeFar, int mouseX, int mouseY){
     Rdx /= M;
     Rdy /= M;
     Rdz /= M;
- 
-    float tmin, tmax, tymin, tymax, tzmin, tzmax;
     
-    if (Rdx >= 0) {
-        tmin = (nodeNear.x - R0x) / Rdx;
-        tmax = (nodeFar.x - R0x) / Rdx;
+    double Tfar = std::numeric_limits<double>::infinity();
+    double Tnear = -1 * Tfar;
+    
+    float T1x, T2x, T1y, T2y, T1z, T2z;
+    
+    float xl = nodeNear.x;
+    float yl = nodeNear.y;
+    float zl = nodeNear.z;
+    
+    float xh = nodeFar.x;
+    float yh = nodeFar.y;
+    float zh = nodeFar.z;
+    
+    //using X plane
+    if (Rdx == 0) {
+        if ((R0x < xl) || (R0x > xh)) {
+            return false;
+        }
     }else{
-        tmin = (nodeFar.x - R0x) / Rdx;
-        tmax = (nodeNear.x - R0x) / Rdx;
+        T1x = (xl - R0x) / Rdx;
+        T2x = (xh - R0x) / Rdx;
+    }
+
+    if (T1x > T2x) {
+        swap(T1x, T2x);
     }
     
-    if (Rdy >= 0) {
-        tymin = (nodeNear.y - R0y) / Rdy;
-        tymax = (nodeFar.y - R0y) / Rdy;
-    }else{
-        tymin = (nodeFar.y - R0y) / Rdy;
-        tymax = (nodeNear.y - R0y) / Rdy;
+    if (T1x > Tnear) {
+        Tnear = T1x;
     }
     
-    if ((tmin > tymax) || (tymin > tmax))
+    if (T2x < Tfar) {
+        Tfar = T2x;
+    }
+    
+    if (Tnear > Tfar) {
         return false;
-    
-    if (tymin > tmin)
-        tmin = tymin;
-    
-    if (tymax < tmax) {
-        tmax = tymax;
     }
     
-    if (Rdz >= 0) {
-        tzmin = (nodeNear.z - R0z) / Rdz;
-        tzmax = (nodeFar.z - R0z) / Rdz;
-    }else{
-        tzmin = (nodeFar.z - R0z) / Rdz;
-        tzmax = (nodeNear.z - R0z) / Rdz;
-    }
-    
-    if ((tmin > tzmax) || (tzmin > tmax))
+    if (Tfar < 0) {
         return false;
-    if (tzmin > tmin) {
-        tmin = tzmin;
     }
-    if (tzmax < tmax)
-        tmax = tzmax;
+    
+    //using Y plane
+    if (Rdy == 0) {
+        if ((R0y < yl) || (R0y > yh)) {
+            return false;
+        }
+    }else{
+        T1y = (yl - R0y) / Rdy;
+        T2y = (yh - R0y) / Rdy;
+    }
+    
+    if (T1y > T2y) {
+        swap(T1y, T2y);
+    }
+    
+    if (T1y > Tnear) {
+        Tnear = T1y;
+    }
+    
+    if (T2y < Tfar) {
+        Tfar = T2y;
+    }
+    
+    if (Tnear > Tfar) {
+        return false;
+    }
+    
+    if (Tfar < 0) {
+        return false;
+    }
+
+    //using Z plane
+    if (Rdz == 0) {
+        if ((R0z < zl) || (R0z > zh)) {
+            return false;
+        }
+    }else{
+        T1z = (zl - R0z) / Rdz;
+        T2z = (zh - R0z) / Rdz;
+    }
+    
+    if (T1z > T2z) {
+        swap(T1z, T2z);
+    }
+    
+    if (T1z > Tnear) {
+        Tnear = T1z;
+    }
+    
+    if (T2z < Tfar) {
+        Tfar = T2z;
+    }
+    
+    if (Tnear > Tfar) {
+        return false;
+    }
+    
+    if (Tfar < 0) {
+        return false;
+    }
+
+    
     return true;
+    
     
 }
 
