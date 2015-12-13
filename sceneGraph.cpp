@@ -39,7 +39,7 @@ void SceneGraph::insertChildNodeHere(Node *node){
 
 //deletes the current node, relinking the children as necessary
 void SceneGraph::deleteThisNode(){
-	//TODO
+    currentNode->children->pop_back();
 }
 
 //draw the scenegraph

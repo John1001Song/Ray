@@ -53,20 +53,6 @@ float spec1[4] = {1,1,1, 1};
 
 float RadToD=180/3.14;
 float ang=0;
-float help1=0;
-float help2=0;
-float help3=0;
-float help4=0;
-float help5=0;
-float help6=0;
-
-float xb0=0;
-float yb0=0;
-float zb0=0;
-
-float xb1=0;
-float yb1=0;
-float zb1=0;
 
 //node ids
 int masterID = 0;
@@ -83,12 +69,9 @@ int getID(){
 #include "nodeMaterial.h"
 SceneGraph *SG;
 
-
-
 /* drawPolygon - takes 4 indices and an array of vertices
  *   and draws a polygon using the vertices indexed by the indices
  */
-
 
 //function which will populate a sample graph
 void initGraph(){
@@ -254,15 +237,7 @@ void keyboard(unsigned char key, int x, int y)
             m->parent = SG->rootNode->children->at(0);
             SG->rootNode->children->at(0)->children->push_back(m);
             SG->currentNode = m;
-            
-            xb0=-0.5;
-            yb0=-0.5;
-            zb0=0.5;
-            
-            xb1=0.5;
-            yb1=0.5;
-            zb1=-0.5;
-            
+
             break;
         }
             
@@ -275,14 +250,6 @@ void keyboard(unsigned char key, int x, int y)
             m->parent = SG->rootNode->children->at(0);
             SG->rootNode->children->at(0)->children->push_back(m);
             SG->currentNode = m;
-            
-            xb0=-0.5;
-            yb0=-0.5;
-            zb0=0.5;
-            
-            xb1=0.5;
-            yb1=0.5;
-            zb1=-0.5;
             
             break;
         }
@@ -297,14 +264,6 @@ void keyboard(unsigned char key, int x, int y)
             SG->rootNode->children->at(0)->children->push_back(m);
             SG->currentNode = m;
             
-            xb0=-0.5;
-            yb0=-0.5;
-            zb0=0.5;
-            
-            xb1=0.5;
-            yb1=0.5;
-            zb1=-0.5;
-            
             break;
         }
             
@@ -317,14 +276,6 @@ void keyboard(unsigned char key, int x, int y)
             m->parent = SG->rootNode->children->at(0);
             SG->rootNode->children->at(0)->children->push_back(m);
             SG->currentNode = m;
-            
-            xb0=-0.5;
-            yb0=-0.5;
-            zb0=0.5;
-            
-            xb1=0.5;
-            yb1=0.5;
-            zb1=-0.5;
             
             break;
         }
@@ -339,18 +290,25 @@ void keyboard(unsigned char key, int x, int y)
             SG->rootNode->children->at(0)->children->push_back(m);
             SG->currentNode = m;
             
-            xb0=-0.5;
-            yb0=-0.5;
-            zb0=0.5;
-            
-            xb1=0.5;
-            yb1=0.5;
-            zb1=-0.5;
-            
             break;
         }
             
-           
+        //press b: cancel previous movement
+        case 'b':
+        {
+            SG->deleteThisNode();
+            break;
+        }
+            
+        case 'r':
+        case 'R':
+        {
+            SG->goToParent();
+            while (SG->currentNode->children->size() > 0) {
+                SG->deleteThisNode();
+            }
+            break;
+        }
             
             //pree '7' to get Gold surface
         case '7':
@@ -820,8 +778,7 @@ bool Intersect(int x, int y){
     
     float t1x, t2x, t1y,t2y, t1z, t2z, tnear,tfar, temp;
     
-    t1x =(xb0-R0x)/Rdx;
-    t2x =(xb1-R0x)/Rdx;
+    
     
     if (t1x> t2x){
         temp=t1x;
@@ -833,8 +790,7 @@ bool Intersect(int x, int y){
     if(tnear>tfar|| tfar<0){
         printf("No intersection!");
     }else{
-        t1y =(yb0-R0y)/Rdy;
-        t2y =(yb1-R0y)/Rdy;
+        
         
         if (t1y> t2y){
             temp=t1y;
@@ -851,8 +807,7 @@ bool Intersect(int x, int y){
         if (tnear>tfar||tfar<0){
             printf("No intersection!");
         }else{
-            t1z =(zb0-R0z)/Rdz;
-            t2z =(zb1-R0z)/Rdz;
+            
             
             if (t1z>t2z){
                 temp=t1z;
@@ -919,8 +874,8 @@ void special(int key, int x, int y)
             Vector3D tempVec3D = {.1,0,0};
             NodeTransform *T = new NodeTransform(Translate, tempVec3D);
             SG->insertChildNodeHere(T);
-            xb0+=0.1;
-            xb1+=0.1;
+            SG->currentNode->nodeNear.x+=0.1;
+            SG->currentNode->nodeFar.x+=0.1;
             break;
         }
             
@@ -930,8 +885,8 @@ void special(int key, int x, int y)
             Vector3D tempVec3D = {-0.1,0,0};
             NodeTransform *T = new NodeTransform(Translate, tempVec3D);
             SG->insertChildNodeHere(T);
-            xb0-=0.1;
-            xb1-=0.1;
+            SG->currentNode->nodeNear.x-=0.1;
+            SG->currentNode->nodeFar.x-=0.1;
             break;
         }
             
@@ -941,8 +896,8 @@ void special(int key, int x, int y)
             Vector3D tempVec3D = {0,0.1,0};
             NodeTransform *T = new NodeTransform(Translate, tempVec3D);
             SG->insertChildNodeHere(T);
-            yb0+=0.1;
-            yb1+=0.1;
+            SG->currentNode->nodeNear.y+=0.1;
+            SG->currentNode->nodeNear.y+=0.1;
             break;
         }
             
@@ -952,8 +907,8 @@ void special(int key, int x, int y)
             Vector3D tempVec3D = {0,-0.1,0};
             NodeTransform *T = new NodeTransform(Translate, tempVec3D);
             SG->insertChildNodeHere(T);
-            yb0-=0.1;
-            yb1-=0.1;
+            SG->currentNode->nodeNear.y-=0.1;
+            SG->currentNode->nodeNear.y-=0.1;
             break;
         }
             
@@ -963,8 +918,8 @@ void special(int key, int x, int y)
             Vector3D tempVec3D = {0,0,0.1};
             NodeTransform *T = new NodeTransform(Translate, tempVec3D);
             SG->insertChildNodeHere(T);
-            zb0+=0.1;
-            zb1+=0.1;
+            SG->currentNode->nodeNear.z+=0.1;
+            SG->currentNode->nodeNear.z+=0.1;
             break;
         }
             
@@ -974,8 +929,8 @@ void special(int key, int x, int y)
             Vector3D tempVec3D = {0,0,-0.1};
             NodeTransform *T = new NodeTransform(Translate, tempVec3D);
             SG->insertChildNodeHere(T);
-            zb0-=0.1;
-            zb1+=0.1;
+            SG->currentNode->nodeNear.z-=0.1;
+            SG->currentNode->nodeNear.z-=0.1;
             break;
         }
             
@@ -1049,13 +1004,13 @@ int main(int argc, char** argv)
     glutInitWindowPosition(50, 50);
     
     glutCreateWindow("SimpleSceneGraph");	//creates the window
+
+    glEnable(GL_DEPTH_TEST);
     
     glutDisplayFunc(display);	//registers "display" as the display callback function
     glutKeyboardFunc(keyboard);
     glutSpecialFunc(special);
     glutMouseFunc(mouse);
-    
-    glEnable(GL_DEPTH_TEST);
     
     init();
     

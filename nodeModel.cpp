@@ -109,6 +109,7 @@ void NodeModel::nodeSpecificCodeUp(){
             if (flag_frame == 3) {
                 wireCube(-1.5,-0.8,1.0,1.5,0.8,-1.0);
             }
+            
             glutSolidTeapot(1);
             break;
             
@@ -127,8 +128,28 @@ void NodeModel::nodeSpecificCodeUp(){
             break;
             
         case Custom:
-            glColor3f(0, 1, 0);
-            glutWireCube(1);
+            glBegin(GL_POLYGON);
+            
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            
+            glColor3f(.5,.5,.5);
+            
+            glTexCoord2f(0, 0);
+            glVertex3f(-1,-1,1);
+            
+            glTexCoord2f(1, 1);
+            glVertex3f(1,-1,1);
+            
+            glTexCoord2f(0, 1);
+            glVertex3f(1,-1,-1);
+            
+            glTexCoord2f(1, 0);
+            glVertex3f(-1,-1,-1);
+            
+            glEnd();
             break;
     }
     glPopMatrix();
