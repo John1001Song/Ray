@@ -882,6 +882,8 @@ void raySelect(int mouseX, int mouseY){
     //use for loop to check if the ray hits each object or not
     for (int i = 0; i < objNumb; i++) {
         //pointer "currentNode" points to the current object; copy current object near vertex to the temp "near" vertex
+        SG->goToParent();
+        SG->goToChild(i);
         currentNear = SG->currentNode->nodeNear;
         //copy object's far vertex to the temp "far" vertex
         currentFar = SG->currentNode->nodeFar;
@@ -889,6 +891,9 @@ void raySelect(int mouseX, int mouseY){
         //compare near and far vertex first, because after transform, near would be far and far be near
         float dNear = getDis(currentNear, mouseX, mouseY);
         float dFar = getDis(currentFar, mouseX, mouseY);
+        
+        printf("dNear is %f\n", dNear);
+        printf("dFar is %f\n", dFar);
         
         if (dNear > dFar) {
             currentFar = SG->currentNode->nodeNear;
@@ -914,6 +919,8 @@ void raySelect(int mouseX, int mouseY){
         //store the hit result to the array
         hitRes[i] = currentHitRes;
     }
+    
+    printf("nearest object is child %d\n", nearObj);
     
     //after the for loop, we could get the shortest distance between the nearest object and the ray origin. And get the index of the child "nearObj"
     //then move the pointer "currentNode" points to this child[nearObj]
@@ -962,6 +969,7 @@ void special(int key, int x, int y)
             SG->currentNode->nodeNear.x+=0.1;
             SG->currentNode->nodeFar.x+=0.1;
             
+            printf("nodeNear x is %f\n", SG->currentNode->nodeNear.x);
             printf("nodeFar x is %f\n", SG->currentNode->nodeFar.x);
             
             break;
@@ -976,6 +984,7 @@ void special(int key, int x, int y)
             SG->currentNode->nodeNear.x-=0.1;
             SG->currentNode->nodeFar.x-=0.1;
             
+            printf("nodeNear x is %f\n", SG->currentNode->nodeNear.x);
             printf("nodeFar x is %f\n", SG->currentNode->nodeFar.x);
             
             break;
@@ -988,8 +997,9 @@ void special(int key, int x, int y)
             NodeTransform *T = new NodeTransform(Translate, tempVec3D);
             SG->insertChildNodeHere(T);
             SG->currentNode->nodeNear.y+=0.1;
-            SG->currentNode->nodeNear.y+=0.1;
+            SG->currentNode->nodeFar.y+=0.1;
             
+            printf("nodeNear y is %f\n", SG->currentNode->nodeNear.y);
             printf("nodeFar y is %f\n", SG->currentNode->nodeFar.y);
             
             break;
@@ -1002,8 +1012,9 @@ void special(int key, int x, int y)
             NodeTransform *T = new NodeTransform(Translate, tempVec3D);
             SG->insertChildNodeHere(T);
             SG->currentNode->nodeNear.y-=0.1;
-            SG->currentNode->nodeNear.y-=0.1;
+            SG->currentNode->nodeFar.y-=0.1;
             
+            printf("nodeNear y is %f\n", SG->currentNode->nodeNear.y);
             printf("nodeFar y is %f\n", SG->currentNode->nodeFar.y);
             
             break;
@@ -1016,8 +1027,9 @@ void special(int key, int x, int y)
             NodeTransform *T = new NodeTransform(Translate, tempVec3D);
             SG->insertChildNodeHere(T);
             SG->currentNode->nodeNear.z+=0.1;
-            SG->currentNode->nodeNear.z+=0.1;
+            SG->currentNode->nodeFar.z+=0.1;
             
+            printf("nodeNear z is %f\n", SG->currentNode->nodeNear.z);
             printf("nodeFar z is %f\n", SG->currentNode->nodeFar.z);
             
             break;
@@ -1030,8 +1042,9 @@ void special(int key, int x, int y)
             NodeTransform *T = new NodeTransform(Translate, tempVec3D);
             SG->insertChildNodeHere(T);
             SG->currentNode->nodeNear.z-=0.1;
-            SG->currentNode->nodeNear.z-=0.1;
+            SG->currentNode->nodeFar.z-=0.1;
             
+            printf("nodeFar z is %f\n", SG->currentNode->nodeNear.z);
             printf("nodeFar z is %f\n", SG->currentNode->nodeFar.z);
             
             break;

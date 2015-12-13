@@ -12,7 +12,7 @@ Node::Node(){	//constructor
     nodePos3D.x = 0; nodePos3D.y = 0; nodePos3D.z = 0;
     nodePos4D.x = 0; nodePos4D.y = 0; nodePos4D.z = 0; nodePos4D.w = 1;
     nodeNear.x = 0.5; nodeNear.y = 0.5; nodeNear.z = 0.5;
-    nodeFar.x = 0.5; nodeFar.y = 0.5; nodeFar.z = 0.5;
+    nodeFar.x = -0.5; nodeFar.y = -0.5; nodeFar.z = -0.5;
 	printf("node init done\n");
 }
 
